@@ -1,38 +1,32 @@
 package com.playgrid.api.client;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.playgrid.api.response.GameListResponse;
+import com.sun.jersey.api.client.ClientResponse;
 
-/**
- * Unit tests for RestAPI
- */
-public class RestAPITest extends TestCase {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public RestAPITest( String testName ) {
-        super( testName );
-    }
+@RunWith(JUnit4.class)
+public class RestAPITest {
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite() {
-        return new TestSuite( RestAPITest.class );
-    }
-
-    /**
-     * Test
-     */
+	RestAPI pgpclient;
+	
+	@Before
+	public void setUp() {
+		pgpclient = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", 
+								"http://local.playgrid.com:8000"
+								);
+	}
+	
+	
+	
+	@Test
     public void testRestAPI() {
-        RestAPI pgpclient = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", "http://local.playgrid.com:8000");  // TODO: (JP) Move to a setup method
-        GameListResponse response = pgpclient.getGames();
-        System.out.println(response);
-//        System.out.println(response.getStatus());
+        ClientResponse response = pgpclient.getGames();
+        System.out.println(response.getEntity(GameListResponse.class));
+        System.out.println(response.getStatus());
     }
 }

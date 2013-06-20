@@ -3,8 +3,8 @@ package com.playgrid.api.client;
 import javax.ws.rs.core.MediaType;
 
 import com.playgrid.api.contextresolver.PGPContextResolver;
-import com.playgrid.api.response.GameListResponse;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -72,8 +72,8 @@ public class RestAPI {
 	
 	
 	
-	public GameListResponse getGames() {
-		return  buildWebResource("games/").get(GameListResponse.class);
+	public ClientResponse getGames() {
+		return  buildWebResource("games/").get(ClientResponse.class);
 	}
 	
 }
