@@ -1,29 +1,32 @@
 package com.playgrid.api.client;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import com.playgrid.api.contextresolver.PGPContextResolver;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.GZIPContentEncodingFilter;
-import com.sun.jersey.api.client.filter.LoggingFilter;
+import org.glassfish.jersey.apache.connector.ApacheConnector;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.message.GZipEncoder;
+
+import com.playgrid.api.entity.GameListResponse;
+import com.playgrid.api.filter.AuthorizationFilter;
+
+//import com.playgrid.api.contextresolver.PGPContextResolver;
 
 
 
 
 public class RestAPI {
 	
-	private String AUTH_TOKEN;	
 	private String PGP_URL = "http://www.playgrid.com";
 	private String PGP_VERSION = "v1";
-	private String BASE_URI;
+	private String ROOT_API_URI;
 	
 	private Client client;
-	private WebResource base_wr;
+	private WebTarget base_wt;
 
 
 	public RestAPI(String auth_token) {
@@ -38,42 +41,41 @@ public class RestAPI {
 	
 	public RestAPI(String auth_token, String url, String version) {
 		
-		AUTH_TOKEN = auth_token;
         PGP_URL = url != null ? url : PGP_URL;
         PGP_VERSION = version != null ? version : PGP_VERSION;
-        BASE_URI = String.format("%s/api/%s", PGP_URL, PGP_VERSION);
         
-        ClientConfig cc = new DefaultClientConfig();							// Create client configuration
-        cc.getClasses().add(PGPContextResolver.class);
+        ROOT_API_URI = String.format("%s/api/%s", PGP_URL, PGP_VERSION);
+        
+        ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
+        
+        clientConfig.register(new AuthorizationFilter(auth_token));             // Register PGP Authorization Token filter
+        clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
+        clientConfig.register(LoggingFilter.class);                             // Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings
+        
+        clientConfig.connector(new ApacheConnector(clientConfig));              // Use Apache Connector
 
-        // TODO: (JP) Set follow redirects
+        // TODO: (JP) Set connection timeout to 15s - only in non debug mode
+        // TODO: (JP) Set read timeout to 30s to correspond to Heroku timeout - only in non debug mode
         
-        client = Client.create(cc);												// Create client
-        client.addFilter(new GZIPContentEncodingFilter());						// Add GZIP filter
-        client.addFilter(new LoggingFilter());									// Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings			
+        client = ClientBuilder.newClient(clientConfig);                         // Create client
         
-        base_wr = client.resource(BASE_URI);
+        base_wt = client.target(ROOT_API_URI);
         		
 	}
 	
-	
-	
-	
-	private Builder buildWebResource(String path) {
+	private Invocation.Builder buildWebTarget(String path) {
+		Invocation.Builder builder;
 		
-		WebResource resource = base_wr.path(path);								// Create a new WebResource
-		Builder builder	= resource.accept(MediaType.APPLICATION_JSON_TYPE);		//  Accept JSON media type
-		
-		String token = String.format("pgp %s", AUTH_TOKEN);
-		builder = builder.header("AUTHORIZATION", token);						// Add authorization header
+		WebTarget target = base_wt.path(path);                                  // Create a new WebTarget
+		builder = target.request(MediaType.APPLICATION_JSON_TYPE);              // Request JSON media type
 		
 		return builder;
 	}
 	
 	
 	
-	public ClientResponse getGames() {
-		return  buildWebResource("games/").get(ClientResponse.class);
+	public GameListResponse getGames() {
+		return  buildWebTarget("games/").get(GameListResponse.class);
 	}
 	
 }

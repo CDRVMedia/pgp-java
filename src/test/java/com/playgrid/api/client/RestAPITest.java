@@ -1,13 +1,16 @@
 package com.playgrid.api.client;
 
 
+import javax.ws.rs.core.Response;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.playgrid.api.response.GameListResponse;
-import com.sun.jersey.api.client.ClientResponse;
+import com.playgrid.api.entity.GameListResponse;
+
+
 
 @RunWith(JUnit4.class)
 public class RestAPITest {
@@ -25,8 +28,10 @@ public class RestAPITest {
 	
 	@Test
     public void testRestAPI() {
-        ClientResponse response = pgpclient.getGames();
-        System.out.println(response.getEntity(GameListResponse.class));
-        System.out.println(response.getStatus());
+        Object obj = pgpclient.getGames();
+//        Object obj = response.getEntity();
+        System.out.println(obj);
+//        System.out.println(response.getEntity(GameListResponse.class));
+//        System.out.println(response.getStatus());
     }
 }

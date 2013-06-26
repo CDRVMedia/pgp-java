@@ -1,4 +1,4 @@
-package com.playgrid.api.response;
+package com.playgrid.api.entity;
 
 import java.net.URI;
 
