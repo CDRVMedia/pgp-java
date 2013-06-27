@@ -7,7 +7,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 
 public class AuthorizationFilter implements ClientRequestFilter {
 	
-	private String token;
+	private final String token;
 
 	/**
 	 * @param token

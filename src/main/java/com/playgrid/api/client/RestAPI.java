@@ -11,10 +11,9 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
-import com.playgrid.api.entity.GameListResponse;
+import com.playgrid.api.entity.GameList;
 import com.playgrid.api.filter.AuthorizationFilter;
 
-//import com.playgrid.api.contextresolver.PGPContextResolver;
 
 
 
@@ -74,8 +73,8 @@ public class RestAPI {
 	
 	
 	
-	public GameListResponse getGames() {
-		return  buildWebTarget("games/").get(GameListResponse.class);
+	public GameList getGames() {
+		return  buildWebTarget("games/").get(GameList.class);
 	}
 	
 }

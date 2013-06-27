@@ -6,13 +6,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class Game {
+public abstract class BaseList {
 
-	public String name;
-	public URI url; 
-	public Boolean online;
-	
-	
-	public Game() {}
+	public Integer count = 0;
+	public URI next = null;
+	public URI previous = null;
 	
 }
