@@ -13,6 +13,7 @@ import org.glassfish.jersey.message.GZipEncoder;
 
 import com.playgrid.api.entity.GameList;
 import com.playgrid.api.filter.AuthorizationFilter;
+import com.playgrid.api.filter.MediaTypeFilter;
 
 
 
@@ -48,6 +49,7 @@ public class RestAPI {
         ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
         
         clientConfig.register(new AuthorizationFilter(auth_token));             // Register PGP Authorization Token filter
+        clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         clientConfig.register(LoggingFilter.class);                             // Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings
         
@@ -62,19 +64,10 @@ public class RestAPI {
         		
 	}
 	
-	private Invocation.Builder buildWebTarget(String path) {
-		Invocation.Builder builder;
-		
-		WebTarget target = base_wt.path(path);                                  // Create a new WebTarget
-		builder = target.request(MediaType.APPLICATION_JSON_TYPE);              // Request JSON media type
-		
-		return builder;
-	}
-	
 	
 	
 	public GameList getGames() {
-		return  buildWebTarget("games/").get(GameList.class);
+		return  base_wt.path("games/").request().get(GameList.class);
 	}
 	
 }
