@@ -13,6 +13,8 @@ import com.playgrid.api.entity.APIRoot;
 import com.playgrid.api.entity.GameResource;
 import com.playgrid.api.entity.Games;
 import com.playgrid.api.entity.Method;
+import com.playgrid.api.entity.PlayerResource;
+import com.playgrid.api.entity.Players;
 
 
 
@@ -60,11 +62,27 @@ public class RestAPITest {
         Games games = api.getGames();
         Assert.assertEquals(1, games.methods.size());
         Method method = games.methods.get(0);
-        Assert.assertTrue(method.name.equals("auth"));
+        Assert.assertTrue(method instanceof Method);
         
         Assert.assertTrue(1 == games.resources.count);
         GameResource gameResource = games.resources.items.get(0);
-        Assert.assertTrue(gameResource.name.equals("Jason and Justin's world"));
+        Assert.assertTrue(gameResource instanceof GameResource);
         
     }
+	
+	
+	
+	@Test
+	public void test_getPlayers() {
+		Players players = api.getPlayers();
+		Assert.assertEquals(2, players.methods.size());
+		Method method = players.methods.get(0);
+		Assert.assertTrue(method instanceof Method);
+		
+		Assert.assertTrue(96 == players.resources.count);
+		Assert.assertTrue(10 == players.resources.items.size());
+		PlayerResource playerResource = players.resources.items.get(0);
+		Assert.assertTrue(playerResource instanceof PlayerResource);
+		
+	}
 }

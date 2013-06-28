@@ -11,6 +11,7 @@ import org.glassfish.jersey.message.GZipEncoder;
 
 import com.playgrid.api.entity.APIRoot;
 import com.playgrid.api.entity.Games;
+import com.playgrid.api.entity.Players;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
 
@@ -75,6 +76,13 @@ public class RestAPI {
 	// Games
 	public Games getGames() {
 		return  root_api_wt.path("games/").request().get(Games.class);
+	}
+
+	
+	
+	// Players
+	public Players getPlayers() {
+		return root_api_wt.path("players/").request().get(Players.class);
 	}
 	
 }
