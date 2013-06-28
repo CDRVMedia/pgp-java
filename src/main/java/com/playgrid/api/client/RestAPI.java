@@ -2,16 +2,15 @@ package com.playgrid.api.client;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.apache.connector.ApacheConnector;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
-import com.playgrid.api.entity.GameList;
+import com.playgrid.api.entity.APIRoot;
+import com.playgrid.api.entity.Games;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
 
@@ -26,7 +25,7 @@ public class RestAPI {
 	private String ROOT_API_URI;
 	
 	private Client client;
-	private WebTarget base_wt;
+	private WebTarget root_api_wt;
 
 
 	public RestAPI(String auth_token) {
@@ -60,14 +59,22 @@ public class RestAPI {
         
         client = ClientBuilder.newClient(clientConfig);                         // Create client
         
-        base_wt = client.target(ROOT_API_URI);
+        root_api_wt = client.target(ROOT_API_URI);
         		
 	}
 	
 	
 	
-	public GameList getGames() {
-		return  base_wt.path("games/").request().get(GameList.class);
+	// Root
+	public APIRoot getAPIRoot() {
+		return root_api_wt.request().get(APIRoot.class);
+	}
+	
+	
+	
+	// Games
+	public Games getGames() {
+		return  root_api_wt.path("games/").request().get(Games.class);
 	}
 	
 }

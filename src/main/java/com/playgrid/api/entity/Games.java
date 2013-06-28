@@ -4,11 +4,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class GameList extends Base {
+public class Games extends Base {
 
-	public GameListResource resources;
+	public GamesResources resources;
 	
 	
-	public GameList() {}
+	public Games() {}
 
 }

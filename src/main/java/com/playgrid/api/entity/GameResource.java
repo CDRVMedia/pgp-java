@@ -6,13 +6,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class Game {
+public class GameResource {
 
 	public String name;
 	public URI url; 
 	public Boolean online;
 	
 	
-	public Game() {}
+	public GameResource() {}
 	
 }

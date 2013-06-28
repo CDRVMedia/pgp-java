@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public abstract class BaseList {
+public abstract class BaseResources {
 
 	public Integer count = 0;
 	public URI next = null;
