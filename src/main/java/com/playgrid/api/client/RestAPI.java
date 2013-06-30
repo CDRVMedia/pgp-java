@@ -22,7 +22,7 @@ import com.playgrid.api.filter.MediaTypeFilter;
 public class RestAPI {
 	
 	private String PGP_URL = "http://www.playgrid.com";                         // TODO: (JP) Turn into URI
-	private String PGP_VERSION = "v1.1";
+	private String PGP_VERSION = "1.1";
 	private String ROOT_API_URI;
 	
 	private Client client;
