@@ -35,7 +35,6 @@ public class RestAPITest {
 	
 	@Test
 	public void test_APIRoot() {
-		
 		APIRoot root = api.getAPIRoot();
 		Assert.assertEquals(3, root.methods.size());
 		

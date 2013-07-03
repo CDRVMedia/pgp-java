@@ -14,4 +14,12 @@ public class PlayerResource {
 	
 	public PlayerResource() {}
 	
+
+	@Override
+	public String toString() {
+
+		return this.name;
+	
+	}
+	
 }

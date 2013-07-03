@@ -14,5 +14,13 @@ public class GameResource {
 	
 	
 	public GameResource() {}
+
+	
+	@Override
+	public String toString() {
+
+		return this.name;
+	
+	}
 	
 }

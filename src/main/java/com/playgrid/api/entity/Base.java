@@ -14,5 +14,13 @@ public abstract class Base {
 	public URI url;
 	
 	public ArrayList<Method> methods;
+
+	
+	@Override
+	public String toString() {
+
+		return this.name;
+	
+	}
 	
 }

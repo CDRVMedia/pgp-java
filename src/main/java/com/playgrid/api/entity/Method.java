@@ -13,4 +13,13 @@ public class Method {
 	
 	public Method() {}
 	
+	
+	@Override
+	public String toString() {
+
+		return this.name;
+	
+	}
+	
 }
+
