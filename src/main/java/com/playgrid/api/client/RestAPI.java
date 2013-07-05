@@ -14,6 +14,7 @@ import com.playgrid.api.entity.Games;
 import com.playgrid.api.entity.Players;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
+import com.playgrid.api.filter.UserAgentFilter;
 
 
 
@@ -49,6 +50,7 @@ public class RestAPI {
         ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
         
         clientConfig.register(new AuthorizationFilter(auth_token));             // Register PGP Authorization Token filter
+        clientConfig.register(UserAgentFilter.class);                           // Register PGP UserAgent filter
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         clientConfig.register(LoggingFilter.class);                             // Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings
