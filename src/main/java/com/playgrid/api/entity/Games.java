@@ -10,5 +10,5 @@ public class Games extends Base {
 	
 	
 	public Games() {}
-
+	
 }

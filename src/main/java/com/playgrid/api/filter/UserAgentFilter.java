@@ -15,7 +15,7 @@ public class UserAgentFilter implements ClientRequestFilter {
 	
 	public UserAgentFilter() {
 		
-		this.version = this.getAPIVersion();
+		this.version = String.format("PGP/%s", this.getAPIVersion());
 	
 	}
 

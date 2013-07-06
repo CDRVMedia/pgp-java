@@ -10,7 +10,9 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
 import com.playgrid.api.entity.APIRoot;
+import com.playgrid.api.entity.GameResponse;
 import com.playgrid.api.entity.Games;
+import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
@@ -80,11 +82,75 @@ public class RestAPI {
 		return  root_api_wt.path("games/").request().get(Games.class);
 	}
 
+
+	public GameResponse gamesAuth() {
+		return  root_api_wt.path("games/auth/").request().get(GameResponse.class);
+	}
+	
+	
+	public GameResponse getGame(Integer id) {
+		return  root_api_wt.path(String.format("games/%s/", id)).request().get(GameResponse.class);
+	}
+
+	
+	public Players gamePlayers(Integer id) {
+		return  root_api_wt.path(String.format("games/%s/players", id)).request().get(Players.class);
+	}
+	
+	
+//	public Balances gameBalances() {
+//		throw new UnsupportedOperationException("Not Implemented");				// TODO: (JP) Implement balances
+//	}
+	
+	
+	public GameResponse gameStart(Integer id) {
+		return  root_api_wt.path(String.format("games/%s/start", id)).request().get(GameResponse.class);
+	}
+
+	
+	public GameResponse gameStop(Integer id) {
+		return  root_api_wt.path(String.format("games/%s/stop", id)).request().get(GameResponse.class);
+	}
+	
+	
+	public GameResponse gameHeartbeat(Integer id) {
+		return  root_api_wt.path(String.format("games/%s/heartbeat", id)).request().get(GameResponse.class);
+	}
+	
 	
 	
 	// Players
 	public Players getPlayers() {
 		return root_api_wt.path("players/").request().get(Players.class);
 	}
+
 	
+	public PlayerResponse playersGet(String player_token) {
+		return  root_api_wt.path(String.format("players/get/%s/", player_token)).request().get(PlayerResponse.class);
+	}
+
+	
+	public PlayerResponse playersGet_or_Create(String player_token) {
+		return  root_api_wt.path(String.format("players/get_or_create/%s/", player_token)).request().get(PlayerResponse.class);
+	}
+	
+	
+	public PlayerResponse getPlayer(Integer id) {
+		return  root_api_wt.path(String.format("players/%s/", id)).request().get(PlayerResponse.class);
+	}
+	
+	
+//	public Balances playerBalances(Integer id) {
+//		throw new UnsupportedOperationException("Not Implemented");				// TODO: (JP) Implement balances
+//	}
+	
+	public PlayerResponse playerJoin(Integer id) {
+		return  root_api_wt.path(String.format("players/%s/join/", id)).request().get(PlayerResponse.class);
+	}
+	
+
+	public PlayerResponse playerQuit(Integer id) {
+		return  root_api_wt.path(String.format("players/%s/quit/", id)).request().get(PlayerResponse.class);
+	}
+
 }
