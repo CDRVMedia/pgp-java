@@ -1,7 +1,6 @@
 package com.playgrid.api.entity;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;

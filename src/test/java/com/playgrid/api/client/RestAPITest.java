@@ -131,7 +131,7 @@ public class RestAPITest {
 		Players players = api.gamePlayers(1);									// FIXME: (JP) Hardcoded ID
 		Assert.assertEquals(0, players.methods.size());
 		
-		Assert.assertTrue(446 == players.resources.count);						// FIXME: (JP) All players are being returned
+		Assert.assertTrue(96 == players.resources.count);
 		Assert.assertTrue(10 == players.resources.items.size());
 		PlayerResource playerResource = players.resources.items.get(0);
 		Assert.assertTrue(playerResource instanceof PlayerResource);
