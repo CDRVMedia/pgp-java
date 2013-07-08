@@ -98,9 +98,9 @@ public class RestAPI {
 	}
 	
 	
-//	public Balances gameBalances() {
-//		throw new UnsupportedOperationException("Not Implemented");				// TODO: (JP) Implement balances
-//	}
+	public void gameBalances() {
+		throw new UnsupportedOperationException("Not Implemented");				// TODO: (JP) Implement balances
+	}
 	
 	
 	public GameResponse gameStart(Integer id) {
@@ -140,9 +140,9 @@ public class RestAPI {
 	}
 	
 	
-//	public Balances playerBalances(Integer id) {
-//		throw new UnsupportedOperationException("Not Implemented");				// TODO: (JP) Implement balances
-//	}
+	public void playerBalances(Integer id) {
+		throw new UnsupportedOperationException("Not Implemented");				// TODO: (JP) Implement balances
+	}
 	
 	public PlayerResponse playerJoin(Integer id) {
 		return  root_api_wt.path(String.format("players/%s/join/", id)).request().get(PlayerResponse.class);
