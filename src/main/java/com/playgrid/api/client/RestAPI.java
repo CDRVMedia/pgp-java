@@ -83,33 +83,23 @@ public class RestAPI {
 	}
 
 
-	public GameResponse gamesAuth() {
-		return  root_api_wt.path("games/auth/").request().get(GameResponse.class);
-	}
-	
-	
 	public GameResponse getGame(Integer id) {
 		return  root_api_wt.path(String.format("games/%s/", id)).request().get(GameResponse.class);
 	}
 
 	
-	public Players gamePlayers(Integer id) {
-		return  root_api_wt.path(String.format("games/%s/players", id)).request().get(Players.class);
-	}
-	
-	
-	public GameResponse gameStart(Integer id) {
-		return  root_api_wt.path(String.format("games/%s/start", id)).request().get(GameResponse.class);
+	public GameResponse gameConnect() {
+		return  root_api_wt.path("games/connect/").request().get(GameResponse.class);
 	}
 
 	
-	public GameResponse gameStop(Integer id) {
-		return  root_api_wt.path(String.format("games/%s/stop", id)).request().get(GameResponse.class);
+	public GameResponse gameDisconnect() {
+		return  root_api_wt.path("games/disconnect/").request().get(GameResponse.class);
 	}
 	
 	
-	public GameResponse gameHeartbeat(Integer id) {
-		return  root_api_wt.path(String.format("games/%s/heartbeat", id)).request().get(GameResponse.class);
+	public GameResponse gameHeartbeat() {
+		return  root_api_wt.path("games/heartbeat/").request().get(GameResponse.class);
 	}
 	
 	

@@ -93,7 +93,7 @@ public class RestAPITest {
 	@Test
     public void test_getGames() {
         Games games = api.getGames();
-        Assert.assertEquals(1, games.methods.size());
+        Assert.assertEquals(3, games.methods.size());
         Method method = games.methods.get(0);
         Assert.assertTrue(method instanceof Method);
         
@@ -106,27 +106,18 @@ public class RestAPITest {
 	
 	
 	@Test
-	public void test_gamesAuth() {
-		GameResponse gameResponse = api.gamesAuth();
-		validateGameResponse(gameResponse, 3);
-		
-	}
-
-
-
-	@Test
 	public void test_getGame() {
 		GameResponse gameResponse = api.getGame(1);								// FIXME: (JP) Hardcoded ID
-		validateGameResponse(gameResponse, 3);
+		validateGameResponse(gameResponse, 0);
 		
 	}
 	
 	
 	
 	@Test
-	public void test_gameStart() {
-		GameResponse gameResponse = api.gameStart(1);							// FIXME: (JP) Hardcoded ID
-		validateGameResponse(gameResponse, 0);									// FIXME: (JP) Methods not consistent
+	public void test_gameConnect() {
+		GameResponse gameResponse = api.gameConnect();
+		validateGameResponse(gameResponse, 0);
 
 		Assert.assertTrue(gameResponse.resources.online);
 		
@@ -135,9 +126,9 @@ public class RestAPITest {
 	
 	
 	@Test
-	public void test_gameStop() {
-		GameResponse gameResponse = api.gameStop(1);							// FIXME: (JP) Hardcoded ID
-		validateGameResponse(gameResponse, 0);									// FIXME: (JP) Methods not consistent
+	public void test_gameDisconnect() {
+		GameResponse gameResponse = api.gameDisconnect();
+		validateGameResponse(gameResponse, 0);
 
 		Assert.assertFalse(gameResponse.resources.online);
 
@@ -147,8 +138,8 @@ public class RestAPITest {
 	
 	@Test
 	public void test_gameHeartbeat() {
-		GameResponse gameResponse = api.gameHeartbeat(1);						// FIXME: (JP) Hardcoded ID
-		validateGameResponse(gameResponse, 0);									// FIXME: (JP) Methods not consistent
+		GameResponse gameResponse = api.gameHeartbeat();
+		validateGameResponse(gameResponse, 0);
 		
 		Assert.assertTrue(gameResponse.resources.online);
 	
