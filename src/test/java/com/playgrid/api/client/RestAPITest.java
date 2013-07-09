@@ -71,12 +71,11 @@ public class RestAPITest {
 	@Test
 	public void test_APIRoot() {
 		APIRoot root = api.getAPIRoot();
-		Assert.assertEquals(3, root.methods.size());
+		Assert.assertEquals(2, root.methods.size());
 		
 		ArrayList<String> expected_names = new ArrayList<String>();
 		expected_names.add("players");
 		expected_names.add("games");
-		expected_names.add("currencies");
 
 		ArrayList<String> actual_names = new ArrayList<String>();
 		for (Method method : root.methods) {
