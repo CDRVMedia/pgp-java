@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class PlayersResources extends BaseResources {
 
-	public ArrayList<PlayerResource> items;
+	public ArrayList<Player> items;
 
 	
 	public PlayersResources() {}

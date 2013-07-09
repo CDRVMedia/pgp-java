@@ -16,12 +16,10 @@ import org.junit.runners.JUnit4;
 
 import com.playgrid.api.entity.APIRoot;
 import com.playgrid.api.entity.Game;
-import com.playgrid.api.entity.GameResource;
 import com.playgrid.api.entity.GameResponse;
 import com.playgrid.api.entity.Games;
 import com.playgrid.api.entity.Method;
 import com.playgrid.api.entity.Player;
-import com.playgrid.api.entity.PlayerResource;
 import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
@@ -63,7 +61,7 @@ public class RestAPITest {
 		api = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", 
 						  "http://bad.playgrid.com:8000");
 
-		exception.expect(ProcessingException.class);
+		exception.expect(ProcessingException.class);							// FIXME: (JP) Really want a 'host not found' exception
 		api.getAPIRoot();
 	
 	}
@@ -101,8 +99,8 @@ public class RestAPITest {
         Assert.assertTrue(method instanceof Method);
         
         Assert.assertTrue(1 == games.resources.count);
-        GameResource gameResource = games.resources.items.get(0);
-        Assert.assertTrue(gameResource instanceof GameResource);
+        Game game = games.resources.items.get(0);
+        Assert.assertTrue(game instanceof Game);
         
     }
 	
@@ -111,7 +109,7 @@ public class RestAPITest {
 	@Test
 	public void test_gamesAuth() {
 		GameResponse gameResponse = api.gamesAuth();
-		validateGameResponse(gameResponse, 5);
+		validateGameResponse(gameResponse, 3);
 		
 	}
 
@@ -120,30 +118,8 @@ public class RestAPITest {
 	@Test
 	public void test_getGame() {
 		GameResponse gameResponse = api.getGame(1);								// FIXME: (JP) Hardcoded ID
-		validateGameResponse(gameResponse, 5);
+		validateGameResponse(gameResponse, 3);
 		
-	}
-	
-	
-	
-	@Test
-	public void test_gamePlayers() {
-		Players players = api.gamePlayers(1);									// FIXME: (JP) Hardcoded ID
-		Assert.assertEquals(0, players.methods.size());
-		
-		Assert.assertTrue(96 == players.resources.count);
-		Assert.assertTrue(10 == players.resources.items.size());
-		PlayerResource playerResource = players.resources.items.get(0);
-		Assert.assertTrue(playerResource instanceof PlayerResource);
-		
-	}
-	
-	
-	
-	@Test
-	public void test_gameBalances() {
-		Assert.assertTrue("Not Implemented", false);
-	
 	}
 	
 	
@@ -190,8 +166,8 @@ public class RestAPITest {
 		
 		Assert.assertTrue(96 == players.resources.count);
 		Assert.assertTrue(10 == players.resources.items.size());
-		PlayerResource playerResource = players.resources.items.get(0);
-		Assert.assertTrue(playerResource instanceof PlayerResource);
+		Player player = players.resources.items.get(0);
+		Assert.assertTrue(player instanceof Player);
 		
 	}
 
@@ -200,7 +176,7 @@ public class RestAPITest {
 	@Test
 	public void test_playersGet() {
 		PlayerResponse playerResponse = api.playersGet("BranchNever");			// FIXME: (JP) Hardcoded token 
-		validatePlayerResponse(playerResponse, 3);								// FIXME: (JP) Methods not consistent
+		validatePlayerResponse(playerResponse, 2);								// FIXME: (JP) Methods not consistent
 		
 	}
 	
@@ -208,16 +184,17 @@ public class RestAPITest {
 	
 	@Test
 	public void test_playersGet_or_Create() {
+		// Test Get
 		PlayerResponse playerResponse = api.playersGet_or_Create("BranchNever");// FIXME: (JP) Hardcoded token
-		validatePlayerResponse(playerResponse, 3);								// FIXME: (JP) Methods not consistent
+		validatePlayerResponse(playerResponse, 2);								// FIXME: (JP) Methods not consistent
 		
-// FIXME: (JP) Anonymous player creation alters database
-		Assert.assertTrue("Not Implemented", false);
-//		playerResponse = api.playersGet_or_Create("TestPlayer"); 				// FIXME: (JP) Hardcoded token
-//		validatePlayerResponse(playerResponse, 1);								// FIXME: (JP) Methods not consistent & null
-//		
-//		Assert.assertTrue(playerResponse.resources.name.equals("TestPlayer"));
-//		Assert.assertTrue(playerResponse.resources.username.equals("anonymous"));
+		// Test Create
+		Assert.assertTrue("Not Implemented", false);							// FIXME: (JP) Anonymous player creation alters database
+		playerResponse = api.playersGet_or_Create("TestPlayer"); 				// FIXME: (JP) Hardcoded token
+		validatePlayerResponse(playerResponse, 1);								// FIXME: (JP) Methods not consistent & null
+		
+		Assert.assertTrue(playerResponse.resources.name.equals("TestPlayer"));
+		Assert.assertTrue(playerResponse.resources.username.equals("anonymous"));
 	}
 	
 	
@@ -225,15 +202,8 @@ public class RestAPITest {
 	@Test
 	public void test_getPlayer() {
 		PlayerResponse playerResponse = api.getPlayer(1);						// FIXME: (JP) Hardcoded ID
-		validatePlayerResponse(playerResponse, 3);								// FIXME: (JP) Methods not consistent
+		validatePlayerResponse(playerResponse, 2);								// FIXME: (JP) Methods not consistent
 		
-	}
-	
-	
-	
-	@Test
-	public void test_playerBalances() {
-		Assert.assertTrue("Not Implemented", false);
 	}
 	
 	

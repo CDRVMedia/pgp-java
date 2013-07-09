@@ -1,5 +1,6 @@
 package com.playgrid.api.entity;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,8 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class Player extends PlayerResource {
+public class Player {
 
+	public String name;
+	public URI url;
 	public ArrayList<String> permission_groups;
 	public String status;
 	public String username;
@@ -20,5 +23,14 @@ public class Player extends PlayerResource {
 
 
 	public Player() {}
+
+
+	
+	@Override
+	public String toString() {
+	
+		return this.name;
+	
+	}
 
 }

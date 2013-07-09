@@ -8,7 +8,6 @@ public class Games extends Base {
 
 	public GamesResources resources;
 	
-	
 	public Games() {}
 	
 }
