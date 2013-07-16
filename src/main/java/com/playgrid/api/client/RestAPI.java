@@ -1,5 +1,6 @@
 package com.playgrid.api.client;
 
+import javax.naming.ConfigurationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -24,34 +25,27 @@ import com.playgrid.api.filter.UserAgentFilter;
 
 public class RestAPI {
 	
-	private String PGP_URL = "http://www.playgrid.com";                         // TODO: (JP) Turn into URI
-	private String PGP_VERSION = "1.1";
-	private String ROOT_API_URI;
-	
+	private volatile static RestAPI uniqueInstance;
+	private static RestConfig config = new RestConfig();
 	private Client client;
 	private WebTarget root_api_wt;
 
-
-	public RestAPI(String auth_token) {
-		this(auth_token, null);
-	}
-
 	
-	public RestAPI(String auth_token, String url) {
-		this(auth_token, url, null);
-	}
-
 	
-	public RestAPI(String auth_token, String url, String version) {
+	private RestAPI() {
 		
-        PGP_URL = url != null ? url : PGP_URL;
-        PGP_VERSION = version != null ? version : PGP_VERSION;
-        
-        ROOT_API_URI = String.format("%s/api/%s", PGP_URL, PGP_VERSION);
+		String token =  null;
+        try {
+        	token = config.getAccessToken();
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
         
         ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
-        
-        clientConfig.register(new AuthorizationFilter(auth_token));             // Register PGP Authorization Token filter
+
+        clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
         clientConfig.register(UserAgentFilter.class);                           // Register PGP UserAgent filter
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
@@ -64,8 +58,32 @@ public class RestAPI {
         
         client = ClientBuilder.newClient(clientConfig);                         // Create client
         
-        root_api_wt = client.target(ROOT_API_URI);
+        root_api_wt = client.target(config.getAPI_URI());
         		
+	}
+	
+	
+	
+	public static RestConfig getConfig() {
+		return config;
+	}
+
+	
+	public static RestAPI getInstance() {
+		if (uniqueInstance == null) {
+			synchronized (RestAPI.class) {
+				if (uniqueInstance == null) {
+					uniqueInstance = new RestAPI();
+				}
+				
+			}
+		}
+		return uniqueInstance;
+	}
+
+	
+	public WebTarget createTarget(String url) {
+		return client.target(url);
 	}
 	
 	
@@ -134,4 +152,5 @@ public class RestAPI {
 		return  root_api_wt.path(String.format("players/%s/quit/", id)).request().get(PlayerResponse.class);
 	}
 
+	
 }

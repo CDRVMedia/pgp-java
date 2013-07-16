@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.ProcessingException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,16 +39,26 @@ public class RestAPITest {
 	
 	@Before
 	public void setUp() {
-		api = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", 
-						  "http://local.playgrid.com:8000"
-						  );
+		
+		RestAPI.getConfig().setAccessToken("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4");
+		RestAPI.getConfig().setURL("http://local.playgrid.com:8000");
+		api = RestAPI.getInstance();
+		
+//		api = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", 
+//						  "http://local.playgrid.com:8000"
+//						  );
 	}
 
-	
-	
+
 	@Test
 	public void test_API_bad_token() {
-		api = new RestAPI("bad_token", "http://local.playgrid.com:8000");
+
+		RestAPI.getConfig().setAccessToken("bad_token");
+		RestAPI.getConfig().setURL("http://local.playgrid.com:8000");
+		api = RestAPI.getInstance();
+
+		
+//		api = new RestAPI("bad_token", "http://local.playgrid.com:8000");
 		
 		exception.expect(NotAuthorizedException.class);
 		api.getAPIRoot();
@@ -58,8 +69,13 @@ public class RestAPITest {
 	
 	@Test
 	public void test_API_bad_host() {
-		api = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", 
-						  "http://bad.playgrid.com:8000");
+		
+		RestAPI.getConfig().setAccessToken("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4");
+		RestAPI.getConfig().setURL("http://bad.playgrid.com:8000");
+		api = RestAPI.getInstance();
+		
+//		api = new RestAPI("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4", 
+//						  "http://bad.playgrid.com:8000");
 
 		exception.expect(ProcessingException.class);							// FIXME: (JP) Really want a 'host not found' exception
 		api.getAPIRoot();
