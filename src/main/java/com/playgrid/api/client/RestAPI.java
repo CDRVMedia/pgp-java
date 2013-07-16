@@ -1,5 +1,8 @@
 package com.playgrid.api.client;
 
+import java.net.URI;
+import java.util.ArrayList;
+
 import javax.naming.ConfigurationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -10,11 +13,11 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
+import com.playgrid.api.client.manager.GameManager;
+import com.playgrid.api.client.manager.PlayerManager;
 import com.playgrid.api.entity.APIRoot;
-import com.playgrid.api.entity.GameResponse;
-import com.playgrid.api.entity.Games;
-import com.playgrid.api.entity.PlayerResponse;
-import com.playgrid.api.entity.Players;
+import com.playgrid.api.entity.Base;
+import com.playgrid.api.entity.Method;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
 import com.playgrid.api.filter.UserAgentFilter;
@@ -29,8 +32,9 @@ public class RestAPI {
 	private static RestConfig config = new RestConfig();
 	private Client client;
 	private WebTarget root_api_wt;
+	private ArrayList<Method> methods;
 
-	
+
 	
 	private RestAPI() {
 		
@@ -85,72 +89,57 @@ public class RestAPI {
 	public WebTarget createTarget(String url) {
 		return client.target(url);
 	}
-	
+
+	public WebTarget createTarget(URI uri) {
+		return client.target(uri);
+	}
+
 	
 	
 	// Root
-	public APIRoot getAPIRoot() {
+	protected APIRoot getAPIRoot() {
 		return root_api_wt.request().get(APIRoot.class);
 	}
 	
-	
-	
-	// Games
-	public Games getGames() {
-		return  root_api_wt.path("games/").request().get(Games.class);
-	}
 
-
-	public GameResponse getGame(Integer id) {
-		return  root_api_wt.path(String.format("games/%s/", id)).request().get(GameResponse.class);
-	}
-
-	
-	public GameResponse gameConnect() {
-		return  root_api_wt.path("games/connect/").request().get(GameResponse.class);
+	private Method getMethod(String name) throws Exception {
+		if (methods == null) {
+			Base base = this.getAPIRoot();
+			this.methods = base.methods;
+		}
+		
+		for (Method m : methods) {
+			if (m.name.equals(name)) {
+				return m;
+			}
+		}
+		throw new Exception("Method Not Found");
 	}
 
 	
-	public GameResponse gameDisconnect() {
-		return  root_api_wt.path("games/disconnect/").request().get(GameResponse.class);
-	}
 	
-	
-	public GameResponse gameHeartbeat() {
-		return  root_api_wt.path("games/heartbeat/").request().get(GameResponse.class);
-	}
-	
-	
-	
-	// Players
-	public Players getPlayers() {
-		return root_api_wt.path("players/").request().get(Players.class);
+	public GameManager getGamesManager() { 
+		try {
+			Method gamesMethod = this.getMethod("games");
+			WebTarget target = this.createTarget(gamesMethod.url);
+			return new GameManager(target);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	
-	public PlayerResponse playersGet(String player_token) {
-		return  root_api_wt.path(String.format("players/get/%s/", player_token)).request().get(PlayerResponse.class);
-	}
 
-	
-	public PlayerResponse playersGet_or_Create(String player_token) {
-		return  root_api_wt.path(String.format("players/get_or_create/%s/", player_token)).request().get(PlayerResponse.class);
-	}
-	
-	
-	public PlayerResponse getPlayer(Integer id) {
-		return  root_api_wt.path(String.format("players/%s/", id)).request().get(PlayerResponse.class);
-	}
-	
-	
-	public PlayerResponse playerJoin(Integer id) {
-		return  root_api_wt.path(String.format("players/%s/join/", id)).request().get(PlayerResponse.class);
-	}
-	
 
-	public PlayerResponse playerQuit(Integer id) {
-		return  root_api_wt.path(String.format("players/%s/quit/", id)).request().get(PlayerResponse.class);
+	public PlayerManager getPlayerManager() {
+		try {
+			Method playersMethod = this.getMethod("players");
+			WebTarget target = this.createTarget(playersMethod.url);
+			return new PlayerManager(target);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-
 	
 }
