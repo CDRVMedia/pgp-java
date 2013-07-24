@@ -8,6 +8,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.glassfish.jersey.apache.connector.ApacheConnector;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
@@ -21,8 +23,6 @@ import com.playgrid.api.entity.Method;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
 import com.playgrid.api.filter.UserAgentFilter;
-
-
 
 
 
@@ -54,6 +54,9 @@ public class RestAPI {
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         clientConfig.register(LoggingFilter.class);                             // Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings
+        
+        ClientConnectionManager connectionManager = new PoolingClientConnectionManager();
+        clientConfig.property("jersey.config.apache.client.connectionManager", connectionManager);
         
         clientConfig.connector(new ApacheConnector(clientConfig));              // Use Apache Connector
 
