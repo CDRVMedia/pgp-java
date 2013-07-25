@@ -45,8 +45,8 @@ public class PlayerManagerTests {
 		Method method = players.methods.get(0);
 		Assert.assertTrue(method instanceof Method);
 		
-		Assert.assertTrue(96 == players.resources.count);
-		Assert.assertTrue(10 == players.resources.items.size());
+		Assert.assertEquals(96, (int) players.resources.count);
+		Assert.assertEquals(10, players.resources.items.size());
 		Player player = players.resources.items.get(0);
 		Assert.assertTrue(player instanceof Player);
 		

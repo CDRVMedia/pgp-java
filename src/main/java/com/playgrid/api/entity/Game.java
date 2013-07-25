@@ -13,8 +13,8 @@ public class Game {
 
 	public String name;
 	public URI url;
-	public Boolean online;
-	public Integer heartbeat_interval;
+	public boolean online;
+	public int heartbeat_interval;
 	public Date auth_timestamp;
 	public URL website;
 

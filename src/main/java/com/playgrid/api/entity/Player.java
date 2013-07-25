@@ -19,8 +19,8 @@ public class Player {
 	public String reason;
 	public Date suspended_until;
 	public Date auth_timestamp;
-	public Boolean online;
-	public Integer unverified_days;
+	public boolean online;
+	public int unverified_days;
 
 
 	public Player() {}
