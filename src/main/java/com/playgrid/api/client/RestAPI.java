@@ -52,7 +52,7 @@ public class RestAPI {
         clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
         clientConfig.register(UserAgentFilter.class);                           // Register PGP UserAgent filter
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
-        clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
+//        clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         clientConfig.register(LoggingFilter.class);                             // Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings
         
         ClientConnectionManager connectionManager = new PoolingClientConnectionManager();
@@ -60,6 +60,7 @@ public class RestAPI {
         
         clientConfig.connector(new ApacheConnector(clientConfig));              // Use Apache Connector
 
+        
         // TODO: (JP) Set connection timeout to 15s - only in non debug mode
         // TODO: (JP) Set read timeout to 30s to correspond to Heroku timeout - only in non debug mode
         

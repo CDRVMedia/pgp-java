@@ -1,6 +1,16 @@
 package com.playgrid.api.client.manager;
 
 
+import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Result;
+import javax.xml.transform.dom.DOMResult;
+
+import org.eclipse.persistence.jaxb.JAXBContextFactory;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,6 +22,7 @@ import org.junit.runners.JUnit4;
 import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Method;
 import com.playgrid.api.entity.Player;
+import com.playgrid.api.entity.PlayerAuthorization;
 import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
@@ -78,6 +89,56 @@ public class PlayerManagerTests {
 //		
 //		Assert.assertTrue(playerResponse.resources.name.equals("TestPlayer"));
 //		Assert.assertTrue(playerResponse.resources.username.equals("anonymous"));
+	}
+	
+	
+	
+	@Test
+	public void test_authorize() {
+		// Test authorization_required (default)
+		PlayerResponse playerResponse;
+		playerResponse = api.getPlayerManager().authorize("BranchNever");       // FIXME: (JP) Hardcoded token
+		validatePlayerResponse(playerResponse, 0);                              // FIXME: (JP) Methods not consistent
+		
+	}
+	
+	
+	@Test
+	public void test_moxy_serialization() {
+
+		JAXBContext ctx = null;
+		Marshaller jsonMarshaller = null;
+		Unmarshaller jsonUnmarshaller = null;
+		
+		try {
+			ctx = JAXBContextFactory.createContext(new Class[] { PlayerAuthorization.class }, null);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		} 
+		
+		try {
+			jsonMarshaller = ctx.createMarshaller();
+			jsonMarshaller.setProperty(MarshallerProperties.MEDIA_TYPE, MediaType.APPLICATION_JSON);
+			jsonMarshaller.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT,	false);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			jsonUnmarshaller = ctx.createUnmarshaller();
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		
+		PlayerAuthorization auth = new PlayerAuthorization("BranchNever");
+		Result result = new DOMResult();
+
+		try {
+			jsonMarshaller.marshal(auth, result);
+			jsonMarshaller.marshal(auth, System.out);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

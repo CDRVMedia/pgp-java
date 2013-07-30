@@ -1,9 +1,11 @@
 package com.playgrid.api.client.manager;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 
 import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Player;
+import com.playgrid.api.entity.PlayerAuthorization;
 import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
@@ -50,13 +52,22 @@ public class PlayerManager extends AbstractManager {
 	}
 
 
+	public PlayerResponse authorize(String player_token) {
+		return authorize(player_token, true);
+	}
+	
+	
+	public PlayerResponse authorize(String player_token, boolean authorization_required) {
+		WebTarget webTarget = baseTarget.path("authorize/");
 
-	public PlayerResponse authorize(String player_token, Boolean authorization_required) {
-		if (authorization_required) {
-			return this.get(player_token);
+		if (authorization_required == false) {
+			webTarget = webTarget.queryParam("authorization_required", authorization_required);
 		}
-		return this.get_or_create(player_token);
-			
+		
+		PlayerAuthorization auth = new PlayerAuthorization(player_token);
+
+		return webTarget.request().put(Entity.json(auth), PlayerResponse.class);
+		
 	}
 
 }

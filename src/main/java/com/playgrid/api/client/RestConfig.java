@@ -42,7 +42,7 @@ public class RestConfig {
 	}
 	
 	public String getAPI_URI() {
-		return String.format("%s/api/%s", pgpURL, version);
+		return String.format("%s/api/%s/", pgpURL, version);
 	}
 
 }
