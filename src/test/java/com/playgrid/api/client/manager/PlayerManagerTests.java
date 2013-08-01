@@ -45,7 +45,6 @@ public class PlayerManagerTests {
 		Method method = players.methods.get(0);
 		Assert.assertTrue(method instanceof Method);
 		
-		Assert.assertEquals(97, (int) players.resources.count);
 		Assert.assertEquals(10, players.resources.items.size());
 		Player player = players.resources.items.get(0);
 		Assert.assertTrue(player instanceof Player);
@@ -56,9 +55,10 @@ public class PlayerManagerTests {
 
 	@Test
 	public void test_get() {
+		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get("BranchNever");             // FIXME: (JP) Hardcoded token 
-		validatePlayerResponse(playerResponse, 2);                              // FIXME: (JP) Methods not consistent
+		playerResponse = api.getPlayerManager().get(token); 
+		validatePlayerResponse(playerResponse, token, 2);                       // FIXME: (JP) Methods not consistent
 		
 	}
 	
@@ -67,9 +67,10 @@ public class PlayerManagerTests {
 	@Test
 	public void test_get_or_create() {
 		// Test Get
+		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get_or_create("BranchNever");   // FIXME: (JP) Hardcoded token
-		validatePlayerResponse(playerResponse, 2);                              // FIXME: (JP) Methods not consistent
+		playerResponse = api.getPlayerManager().get_or_create(token);
+		validatePlayerResponse(playerResponse, token, 2);                       // FIXME: (JP) Methods not consistent
 		
 //		// Test Create
 //		Assert.assertTrue("Not Implemented", false);                            // FIXME: (JP) Anonymous player creation alters database
@@ -85,9 +86,25 @@ public class PlayerManagerTests {
 	@Test
 	public void test_authorize() {
 		// Test authorization_required (default)
+		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().authorize("BranchNever");       // FIXME: (JP) Hardcoded token
-		validatePlayerResponse(playerResponse, 0);                              // FIXME: (JP) Methods not consistent
+		playerResponse = api.getPlayerManager().authorize(token);
+		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
+
+		// Test authorization_required (False) with known player
+		playerResponse = api.getPlayerManager().authorize(token, false);
+		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
+		
+
+/*
+ * This test alter's the database
+ *  
+ *		// Test authorization_required (False) with unknown player
+ * 		token = "UnknownPlayer";                                                // FIXME: (JP) Hardcoded token
+ * 		playerResponse = api.getPlayerManager().authorize(token, false);
+ * 		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
+ *
+ */
 		
 	}
 	
@@ -106,19 +123,20 @@ public class PlayerManagerTests {
 		// Test with offline Game
 		api.getGamesManager().disconnect();
 		
+		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get("BranchNever");             // FIXME: (JP) Hardcoded token 
+		playerResponse = api.getPlayerManager().get(token);
 		Player player = playerResponse.resources;
 
 		playerResponse = api.getPlayerManager().join(player);
-		validatePlayerResponse(playerResponse, 0);                              // FIXME: (JP) Methods not consistent
+		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
 		Assert.assertFalse(playerResponse.resources.online);
 
 		// Test with online Game
 		api.getGamesManager().connect();
 
 		playerResponse = api.getPlayerManager().join(player);
-		validatePlayerResponse(playerResponse, 0);                              // FIXME: (JP) Methods not consistent
+		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
 		Assert.assertTrue(playerResponse.resources.online);
 
 		
@@ -128,13 +146,14 @@ public class PlayerManagerTests {
 	
 	@Test
 	public void test_quit() {
+		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get("BranchNever");             // FIXME: (JP) Hardcoded token 
+		playerResponse = api.getPlayerManager().get(token); 
 		Player player = playerResponse.resources;
 
 		
 		playerResponse = api.getPlayerManager().quit(player);
-		validatePlayerResponse(playerResponse, 0);                              // FIXME: (JP) Methods not consistent
+		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
 
 		Assert.assertFalse(playerResponse.resources.online);
 
@@ -142,8 +161,8 @@ public class PlayerManagerTests {
 	
 
 	
-	private void validatePlayerResponse(PlayerResponse playerResponse, Integer method_count) {
-		Assert.assertEquals(method_count, (Integer)playerResponse.methods.size());
+	private void validatePlayerResponse(PlayerResponse playerResponse, String token, int method_count) {
+		Assert.assertEquals(method_count, playerResponse.methods.size());
 		if (method_count > 0) {
 			Method method = playerResponse.methods.get(0);
 			Assert.assertTrue(method instanceof Method);
@@ -151,7 +170,7 @@ public class PlayerManagerTests {
 		
 		Assert.assertTrue(playerResponse.resources instanceof Player);
 		Player player = playerResponse.resources;
-		Assert.assertTrue(player.name.equals("BranchNever"));
+		Assert.assertTrue(player.name.equals(token));
 	}
 
 }

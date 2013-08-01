@@ -7,7 +7,7 @@ import javax.naming.ConfigurationException;
 public class RestConfig {
 	
 	private String accessToken = null;
-	private String pgpURL = "http://www.playgrid.com";                          // TODO: (JP) Turn into URI
+	private String pgpURL = "http://api.playgrid.com";                          // TODO: (JP) Turn into URI
 	private String version = "1.1";
 	
 	public String getAccessToken() throws ConfigurationException {
