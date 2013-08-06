@@ -1,7 +1,6 @@
 package com.playgrid.api.entity;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,7 +12,7 @@ public class Player {
 
 	public String name;
 	public URI url;
-	public ArrayList<String> permission_groups;
+	public String[] permission_groups;
 	public Status status;
 	public String user_id;
 	public String reason;
