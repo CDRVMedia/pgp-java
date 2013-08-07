@@ -10,6 +10,10 @@ public class RestConfig {
 	private String pgpURL = "http://api.playgrid.com";                          // TODO: (JP) Turn into URI
 	private String version = "1.1";
 	
+	private boolean debug = false;
+	
+	
+	
 	public String getAccessToken() throws ConfigurationException {
 		if (accessToken == null) {
 			throw new ConfigurationException("PGP Access Token Required");
@@ -17,13 +21,19 @@ public class RestConfig {
 		return accessToken;
 	}
 	
+	
+	
 	public void setAccessToken(String token) {
 		this.accessToken = token;
 	}
 	
+	
+	
 	public String getURL() {
 		return pgpURL;
 	}
+	
+	
 	
 	public void setURL(String url) {
 		if (url != null && !url.isEmpty()) {
@@ -31,9 +41,13 @@ public class RestConfig {
 		}
 	}
 	
+	
+	
 	public String getVersion() {
 		return version;
 	}
+	
+	
 	
 	public void setVersion(String version) {
 		if (version != null && !version.isEmpty()) {
@@ -41,8 +55,22 @@ public class RestConfig {
 		}
 	}
 	
+	
+	
 	public String getAPI_URI() {
 		return String.format("%s/api/%s/", pgpURL, version);
+	}
+
+	
+	
+	public boolean isDebug() {
+		return debug;
+	}
+
+	
+	
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 }

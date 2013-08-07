@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import javax.naming.ConfigurationException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -38,7 +39,7 @@ public class RestAPI {
 	
 	private RestAPI() {
 		
-		String token =  null;
+		String token =  null;                                                   // FIXME (JP): Handle this better
         try {
         	token = config.getAccessToken();
 		} catch (ConfigurationException e) {
@@ -52,8 +53,11 @@ public class RestAPI {
         clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
         clientConfig.register(UserAgentFilter.class);                           // Register PGP UserAgent filter
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
-//        clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
-        clientConfig.register(LoggingFilter.class);                             // Add logging filter // TODO: (JP) integrate with log4j and DEBUG settings
+        clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
+        
+        if (config.isDebug()) {
+        	clientConfig.register(LoggingFilter.class);                         // Add logging filter
+        }
         
         ClientConnectionManager connectionManager = new PoolingClientConnectionManager();
         clientConfig.property("jersey.config.apache.client.connectionManager", connectionManager);
@@ -127,8 +131,13 @@ public class RestAPI {
 			Method gamesMethod = this.getMethod("games");
 			WebTarget target = this.createTarget(gamesMethod.url);
 			return new GameManager(target);
+		
+		} catch (NotFoundException e) {
+			throw e;                                                            // TODO (JP): Add logging to display missing uri
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+		
 		}
 		return null;
 	}
