@@ -10,18 +10,28 @@ import javax.ws.rs.core.HttpHeaders;
 
 public class UserAgentFilter implements ClientRequestFilter {
 	
-	private final String version;
+	private final StringBuilder versionBuilder = new StringBuilder();
 
 	
 	public UserAgentFilter() {
 		
-		this.version = String.format("PGP/%s", this.getAPIVersion());
+		versionBuilder.append(String.format("PGP/%s", this.getAPIVersion()));
 	
 	}
 
 	
 
-	private String getAPIVersion() {											// TODO: (JP) Expand this to support plugin version
+	public UserAgentFilter(String userAgent) {
+
+		this();
+		versionBuilder.append(userAgent);
+	
+	}
+
+
+
+	private String getAPIVersion() {
+
 		String path = "/version.properties";
 		InputStream stream = getClass().getResourceAsStream(path);
 		
@@ -33,8 +43,10 @@ public class UserAgentFilter implements ClientRequestFilter {
             props.load(stream);
             stream.close();
             return (String)props.get("pgp.api.version");
+        
         } catch (IOException e) {
             return version;
+        
         }
 	
 	}
@@ -44,7 +56,7 @@ public class UserAgentFilter implements ClientRequestFilter {
 	@Override
 	public void filter(ClientRequestContext requestContext) throws IOException {
 	
-		requestContext.getHeaders().add(HttpHeaders.USER_AGENT, this.version);
+		requestContext.getHeaders().add(HttpHeaders.USER_AGENT, versionBuilder.toString());
 		
 	}
 

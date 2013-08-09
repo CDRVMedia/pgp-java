@@ -51,7 +51,7 @@ public class RestAPI {
         ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
 
         clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
-        clientConfig.register(UserAgentFilter.class);                           // Register PGP UserAgent filter
+        clientConfig.register(new UserAgentFilter(config.getUserAgent()));      // Register PGP UserAgent filter
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         

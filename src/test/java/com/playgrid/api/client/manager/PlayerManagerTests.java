@@ -32,6 +32,7 @@ public class PlayerManagerTests {
 		
 		RestAPI.getConfig().setAccessToken("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4");
 		RestAPI.getConfig().setURL("http://api.local.playgrid.com:8001");
+		RestAPI.getConfig().setDebug(true);
 		this.api = RestAPI.getInstance();
 		
 	}

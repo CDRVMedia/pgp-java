@@ -10,6 +10,8 @@ public class RestConfig {
 	private String pgpURL = "http://api.playgrid.com";                          // TODO: (JP) Turn into URI
 	private String version = "1.1";
 	
+	private StringBuilder userAgent = new StringBuilder();
+	
 	private boolean debug = false;
 	
 	
@@ -73,6 +75,28 @@ public class RestConfig {
 		this.debug = debug;
 	}
 
+
+
+	/**
+	 * Get UserAgent
+	 * @return the userAgent
+	 */
+	public String getUserAgent() {
+		return userAgent.toString();
+	}
+
+
+
+	/**
+	 * Append UserAgent
+	 * @param userAgent, the userAgent to append
+	 */
+	public void appendUserAgent(String userAgent) {
+		if (userAgent != null && !userAgent.isEmpty()) {
+			this.userAgent.append(" " + userAgent);
+	
+		}
+	}
 }
 
 

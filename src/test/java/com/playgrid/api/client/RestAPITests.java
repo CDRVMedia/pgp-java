@@ -32,6 +32,7 @@ public class RestAPITests {
 		
 		RestAPI.getConfig().setAccessToken("05e7234457ccfa5ea0839ec6b38b5b2b05f822e4");
 		RestAPI.getConfig().setURL("http://api.local.playgrid.com:8001");
+		RestAPI.getConfig().setDebug(true);
 		api = RestAPI.getInstance();
 		
 	}
@@ -63,7 +64,24 @@ public class RestAPITests {
 //	
 //	}
 
+	
+	@Test
+	public void test_appendingUserAgent() {
+		String userAgent = RestAPI.getConfig().getUserAgent();
+		
+		String testUA = "TestUA/1000";
+		RestAPI.getConfig().appendUserAgent(testUA);
+		Assert.assertEquals(userAgent+" "+testUA, RestAPI.getConfig().getUserAgent());
 
+		userAgent = RestAPI.getConfig().getUserAgent();
+		
+		testUA = "TestUA/2000";
+		RestAPI.getConfig().appendUserAgent(testUA);
+		Assert.assertEquals(userAgent+" "+testUA, RestAPI.getConfig().getUserAgent());
+		
+	}
+
+	
 	
 	@Test
 	public void test_APIRoot() {
