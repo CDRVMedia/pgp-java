@@ -13,6 +13,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.glassfish.jersey.apache.connector.ApacheConnector;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
@@ -64,9 +65,9 @@ public class RestAPI {
         
         clientConfig.connector(new ApacheConnector(clientConfig));              // Use Apache Connector
 
+        clientConfig.property(ClientProperties.CONNECT_TIMEOUT, 30000);         // 30s in ms
+        clientConfig.property(ClientProperties.READ_TIMEOUT, 30000);            // 30s in ms
         
-        // TODO: (JP) Set connection timeout to 15s - only in non debug mode
-        // TODO: (JP) Set read timeout to 30s to correspond to Heroku timeout - only in non debug mode
         
         client = ClientBuilder.newClient(clientConfig);                         // Create client
         
