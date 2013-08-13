@@ -1,10 +1,10 @@
 package com.playgrid.api.client;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.ConfigurationException;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -34,7 +34,7 @@ public class RestAPI {
 	private static RestConfig config = new RestConfig();
 	private Client client;
 	private WebTarget root_api_wt;
-	private ArrayList<Method> methods;
+	private List<Method> methods;
 
 
 	
@@ -111,7 +111,7 @@ public class RestAPI {
 	}
 	
 
-	private Method getMethod(String name) throws Exception {
+	private Method getMethod(String name) {
 		if (methods == null) {
 			Base base = this.getAPIRoot();
 			this.methods = base.methods;
@@ -122,38 +122,30 @@ public class RestAPI {
 				return m;
 			}
 		}
-		throw new Exception("Method Not Found");
+	
+		String msg = String.format("Method '%s' Not Found", name);
+		throw new NotAllowedException(msg, methods.toString(), (String[])null);
+	
 	}
 
 	
 	
 	public GameManager getGamesManager() { 
-		try {
-			Method gamesMethod = this.getMethod("games");
-			WebTarget target = this.createTarget(gamesMethod.url);
-			return new GameManager(target);
+
+		Method gamesMethod = this.getMethod("games");
+		WebTarget target = this.createTarget(gamesMethod.url);
+		return new GameManager(target);
 		
-		} catch (NotFoundException e) {
-			throw e;                                                            // TODO (JP): Add logging to display missing uri
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		
-		}
-		return null;
 	}
 
 
 
 	public PlayerManager getPlayerManager() {
-		try {
-			Method playersMethod = this.getMethod("players");
-			WebTarget target = this.createTarget(playersMethod.url);
-			return new PlayerManager(target);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	
+		Method playersMethod = this.getMethod("players");
+		WebTarget target = this.createTarget(playersMethod.url);
+		return new PlayerManager(target);
+
 	}
 	
 }
