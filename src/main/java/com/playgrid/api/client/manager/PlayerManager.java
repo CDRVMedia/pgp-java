@@ -1,7 +1,9 @@
 package com.playgrid.api.client.manager;
 
+import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Player;
@@ -10,7 +12,6 @@ import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
 public class PlayerManager extends AbstractManager {
-
 	
 	
 	public PlayerManager(WebTarget target) {
@@ -18,37 +19,42 @@ public class PlayerManager extends AbstractManager {
 	}
 	
 	
-	
 	@Override
 	public Players all() {
-		return baseTarget.request().get(Players.class);	
+		Response response = baseTarget.request().get();
+		return RestAPI.getInstance().translateResponse(response, Players.class);
 	}
 
 	
 	public PlayerResponse get(String player_token) {
-		return  baseTarget.path(String.format("get/%s/", player_token)).request().get(PlayerResponse.class);
+		Response response = baseTarget.path(String.format("get/%s/", player_token)).request().get();
+		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 	}
 
 	
 	public PlayerResponse get_or_create(String player_token) {
-		return  baseTarget.path(String.format("get_or_create/%s/", player_token)).request().get(PlayerResponse.class);
+		Response response = baseTarget.path(String.format("get_or_create/%s/", player_token)).request().get();
+		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 	}
 	
 	
 //	public PlayerResponse getPlayer(Integer id) {
-//		return  baseTarget.path(String.format("%s/", id)).request().get(PlayerResponse.class);
+//		Response response = baseTarget.path(String.format("%s/", id)).request().get();
+//		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 //	}
 	
 	
 	public PlayerResponse join(Player player) {
 		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url);
-		return  webTarget.path("join/").request().get(PlayerResponse.class);
+		Response response = webTarget.path("join/").request().get();
+		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 	}
 	
 
 	public PlayerResponse quit(Player player) {
 		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url);
-		return  webTarget.path("quit/").request().get(PlayerResponse.class);
+		Response response = webTarget.path("quit/").request().get();
+		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 	}
 
 
@@ -66,8 +72,12 @@ public class PlayerManager extends AbstractManager {
 		
 		PlayerAuthorization auth = new PlayerAuthorization(player_token);
 
-		return webTarget.request().put(Entity.json(auth), PlayerResponse.class);
-		
+		Response response = webTarget.request().put(Entity.json(auth));
+		if (response.getStatus() == 405) {
+			throw new NotAllowedException(response);
+		}
+		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+
 	}
 
 }

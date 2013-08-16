@@ -4,16 +4,31 @@ import java.net.URI;
 import java.util.List;
 
 import javax.naming.ConfigurationException;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotAcceptableException;
 import javax.ws.rs.NotAllowedException;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.NotSupportedException;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.RedirectionException;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.ServiceUnavailableException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.glassfish.jersey.apache.connector.ApacheConnector;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
@@ -82,6 +97,7 @@ public class RestAPI {
 	}
 
 	
+	
 	public static RestAPI getInstance() {
 		if (uniqueInstance == null) {
 			synchronized (RestAPI.class) {
@@ -93,12 +109,108 @@ public class RestAPI {
 		}
 		return uniqueInstance;
 	}
+	
+	
+	
+	public <T> T translateResponse(Response response, Class<T> responseType) {
 
+		if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+            WebApplicationException webAppException;
+	        try {
+	            final int statusCode = response.getStatus();
+	            final Response.Status status = Response.Status.fromStatusCode(statusCode);
+
+	            if (status == null) {
+	                final Response.Status.Family statusFamily = response.getStatusInfo().getFamily();
+	                webAppException = createExceptionForFamily(response, statusFamily);
+	            } else switch (status) {
+	                
+	            	case BAD_REQUEST:
+	                    webAppException = new BadRequestException(response);
+	                    break;
+	                
+	                case UNAUTHORIZED:
+	                    webAppException = new NotAuthorizedException(response);
+	                    break;
+	                
+	                case FORBIDDEN:
+	                    webAppException = new ForbiddenException(response);
+	                    break;
+	                
+	                case NOT_FOUND:
+	                    webAppException = new NotFoundException(response);
+	                    break;
+	                
+	                case METHOD_NOT_ALLOWED:
+	                    webAppException = new NotAllowedException(response);
+	                    break;
+	                
+	                case NOT_ACCEPTABLE:
+	                    webAppException = new NotAcceptableException(response);
+	                    break;
+	                
+	                case UNSUPPORTED_MEDIA_TYPE:
+	                    webAppException = new NotSupportedException(response);
+	                    break;
+	                
+	                case INTERNAL_SERVER_ERROR:
+	                    webAppException = new InternalServerErrorException(response);
+	                    break;
+	                
+	                case SERVICE_UNAVAILABLE:
+	                    webAppException = new ServiceUnavailableException(response);
+	                    break;
+
+	                default:
+	                    final Response.Status.Family statusFamily = response.getStatusInfo().getFamily();
+	                    webAppException = createExceptionForFamily(response, statusFamily);
+	            }
+
+	        } catch (Throwable t) {
+	            throw new ProcessingException(LocalizationMessages.RESPONSE_TO_EXCEPTION_CONVERSION_FAILED(), t.getCause());
+	        }
+	        
+	        if (webAppException != null) {
+	        	try {
+	        		response.readEntity(responseType);
+	        	} catch (Exception e) {
+	        	}
+        		throw webAppException;
+	        }
+
+		}
+
+		return response.readEntity(responseType);
+		
+	}
+
+	
+	
+    private WebApplicationException createExceptionForFamily(Response response, Response.Status.Family statusFamily) {
+        WebApplicationException webAppException;
+        switch (statusFamily) {
+            case REDIRECTION:
+                webAppException = new RedirectionException(response);
+                break;
+            case CLIENT_ERROR:
+                webAppException = new ClientErrorException(response);
+                break;
+            case SERVER_ERROR:
+                webAppException = new ServerErrorException(response);
+                break;
+            default:
+                webAppException = new WebApplicationException(response);
+        }
+        return webAppException;
+    }
+	
 	
 	public WebTarget createTarget(String url) {
 		return client.target(url);
 	}
 
+	
+	
 	public WebTarget createTarget(URI uri) {
 		return client.target(uri);
 	}
@@ -107,10 +219,12 @@ public class RestAPI {
 	
 	// Root
 	protected APIRoot getAPIRoot() {
-		return root_api_wt.request().get(APIRoot.class);
+		Response response = root_api_wt.request().get();
+		return translateResponse(response, APIRoot.class);
 	}
 	
 
+	
 	private Method getMethod(String name) {
 		if (methods == null) {
 			Base base = this.getAPIRoot();
