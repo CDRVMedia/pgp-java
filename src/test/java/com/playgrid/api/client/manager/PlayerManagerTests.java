@@ -12,6 +12,8 @@ import org.junit.runners.JUnit4;
 import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Method;
 import com.playgrid.api.entity.Player;
+import com.playgrid.api.entity.PlayerRegistration;
+import com.playgrid.api.entity.PlayerRegistrationResponse;
 import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
@@ -55,36 +57,6 @@ public class PlayerManagerTests {
 
 
 	@Test
-	public void test_get() {
-		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get(token); 
-		validatePlayerResponse(playerResponse, token, 2);                       // FIXME: (JP) Methods not consistent
-		
-	}
-	
-	
-	
-	@Test
-	public void test_get_or_create() {
-		// Test Get
-		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get_or_create(token);
-		validatePlayerResponse(playerResponse, token, 2);                       // FIXME: (JP) Methods not consistent
-		
-//		// Test Create
-//		Assert.assertTrue("Not Implemented", false);                            // FIXME: (JP) Anonymous player creation alters database
-//		playerResponse = api.getPlayerAPI().playersGet_or_Create("TestPlayer"); // FIXME: (JP) Hardcoded token
-//		validatePlayerResponse(playerResponse, 1);                              // FIXME: (JP) Methods not consistent & null
-//		
-//		Assert.assertTrue(playerResponse.resources.name.equals("TestPlayer"));
-//		Assert.assertTrue(playerResponse.resources.username.equals("anonymous"));
-	}
-	
-	
-	
-	@Test
 	public void test_authorize() {
 		// Test authorization_required (default)
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
@@ -95,10 +67,9 @@ public class PlayerManagerTests {
 		// Test authorization_required (False) with known player
 		playerResponse = api.getPlayerManager().authorize(token, false);
 		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
-		
 
 /*
- * This test alter's the database
+ * This test alters the database
  *  
  *		// Test authorization_required (False) with unknown player
  * 		token = "UnknownPlayer";                                                // FIXME: (JP) Hardcoded token
@@ -108,6 +79,33 @@ public class PlayerManagerTests {
  */
 		
 	}
+	
+
+	
+	@Test
+	public void test_register() {
+		String token = "test";                                                  // FIXME: (JP) Tear down the created player/account
+		String email = "test@playgrid.com";
+
+		PlayerRegistrationResponse prr;
+		prr = api.getPlayerManager().register(token, email);
+		PlayerRegistration playerRegistration = prr.resources;
+		
+		Assert.assertTrue(playerRegistration.player_token.equals(token));
+		Assert.assertTrue(playerRegistration.email.equals(email));
+		Assert.assertTrue(playerRegistration.message.equals("SUCCESS"));
+
+		token = "BranchNever";                                                  // FIXME: (JP) Hardcoded ID & email
+		email = "jason@94920.org";
+		prr = api.getPlayerManager().register(token, email);
+		playerRegistration = prr.resources;
+		
+		Assert.assertTrue(playerRegistration.player_token.equals(token));
+		Assert.assertTrue(playerRegistration.email.equals(email));
+		Assert.assertTrue(playerRegistration.message.equals("ALREADY REGISTERED"));
+
+	}
+	
 	
 	
 //	@Test
@@ -126,7 +124,7 @@ public class PlayerManagerTests {
 		
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get(token);
+		playerResponse = api.getPlayerManager().authorize(token);
 		Player player = playerResponse.resources;
 
 		playerResponse = api.getPlayerManager().join(player);
@@ -139,7 +137,6 @@ public class PlayerManagerTests {
 		playerResponse = api.getPlayerManager().join(player);
 		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
 		Assert.assertTrue(playerResponse.resources.online);
-
 		
 	}
 	
@@ -149,7 +146,7 @@ public class PlayerManagerTests {
 	public void test_quit() {
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().get(token); 
+		playerResponse = api.getPlayerManager().authorize(token); 
 		Player player = playerResponse.resources;
 
 		

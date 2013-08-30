@@ -8,6 +8,8 @@ import javax.ws.rs.core.Response;
 import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Player;
 import com.playgrid.api.entity.PlayerAuthorization;
+import com.playgrid.api.entity.PlayerRegistration;
+import com.playgrid.api.entity.PlayerRegistrationResponse;
 import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
@@ -25,18 +27,6 @@ public class PlayerManager extends AbstractManager {
 		return RestAPI.getInstance().translateResponse(response, Players.class);
 	}
 
-	
-	public PlayerResponse get(String player_token) {
-		Response response = baseTarget.path(String.format("get/%s/", player_token)).request().get();
-		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
-	}
-
-	
-	public PlayerResponse get_or_create(String player_token) {
-		Response response = baseTarget.path(String.format("get_or_create/%s/", player_token)).request().get();
-		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
-	}
-	
 	
 //	public PlayerResponse getPlayer(Integer id) {
 //		Response response = baseTarget.path(String.format("%s/", id)).request().get();
@@ -78,6 +68,17 @@ public class PlayerManager extends AbstractManager {
 		}
 		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 
+	}
+
+
+	public PlayerRegistrationResponse register(String player_token, String email) {
+		WebTarget webTarget = baseTarget.path("register/");
+
+		PlayerRegistration reg = new PlayerRegistration(player_token, email);
+		
+		Response response = webTarget.request().put(Entity.json(reg));
+		return RestAPI.getInstance().translateResponse(response, PlayerRegistrationResponse.class);
+		
 	}
 
 }
