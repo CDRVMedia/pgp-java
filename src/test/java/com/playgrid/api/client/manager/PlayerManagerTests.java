@@ -44,13 +44,26 @@ public class PlayerManagerTests {
 	@Test
 	public void test_all() {
 		Players players = api.getPlayerManager().all();
-		Assert.assertEquals(3, players.methods.size());
+		Assert.assertEquals(2, players.methods.size());
 		Method method = players.methods.get(0);
 		Assert.assertTrue(method instanceof Method);
 		
-		Assert.assertEquals(10, players.resources.items.size());
+		Assert.assertTrue(0 < players.resources.items.size());
 		Player player = players.resources.items.get(0);
 		Assert.assertTrue(player instanceof Player);
+		
+	}
+	
+	
+	
+	@Test
+	public void test_reload() {
+		Players players = api.getPlayerManager().all();
+		Player player = players.resources.items.get(0);
+		PlayerResponse response = api.getPlayerManager().reload(player);
+		Player reloaded = response.resources;
+		
+		Assert.assertEquals(player.url, reloaded.url);                          // Make sure urls (id) match
 		
 	}
 
@@ -105,15 +118,6 @@ public class PlayerManagerTests {
 		Assert.assertTrue(playerRegistration.message.equals("ALREADY REGISTERED"));
 
 	}
-	
-	
-	
-//	@Test
-//	public void test_getPlayer() {
-//		PlayerResponse playerResponse = api.getPlayerAPI().getPlayer(1);        // FIXME: (JP) Hardcoded ID
-//		validatePlayerResponse(playerResponse, 2);                              // FIXME: (JP) Methods not consistent
-//		
-//	}
 	
 	
 	

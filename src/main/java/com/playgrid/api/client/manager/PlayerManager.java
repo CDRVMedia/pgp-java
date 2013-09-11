@@ -28,10 +28,11 @@ public class PlayerManager extends AbstractManager {
 	}
 
 	
-//	public PlayerResponse getPlayer(Integer id) {
-//		Response response = baseTarget.path(String.format("%s/", id)).request().get();
-//		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
-//	}
+	public PlayerResponse reload(Player player) {
+		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url);
+		Response response = webTarget.request().get();
+		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+	}
 	
 	
 	public PlayerResponse join(Player player) {
