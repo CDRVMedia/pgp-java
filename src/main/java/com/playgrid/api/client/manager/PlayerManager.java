@@ -36,15 +36,46 @@ public class PlayerManager extends AbstractManager {
 	
 	
 	public PlayerResponse join(Player player) {
-		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url);
-		Response response = webTarget.path("join/").request().get();
+		return this.join(player, null);
+	}
+	
+	
+	public PlayerResponse join(Player player, String stats) {
+		
+		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url).path("join/");
+		
+		Response response;
+		if (stats == null) {
+			response = webTarget.request().get();
+		
+		} else {
+			response = webTarget.request().post(Entity.json(stats));
+		
+		}
+		
 		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+	
 	}
 	
 
 	public PlayerResponse quit(Player player) {
-		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url);
-		Response response = webTarget.path("quit/").request().get();
+		return this.quit(player, null);
+	}
+
+
+	public PlayerResponse quit(Player player, String stats) {
+		
+		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url).path("quit/");
+		
+		Response response;
+		if (stats == null) {
+			response = webTarget.request().get();
+			
+		} else {
+			response = webTarget.request().post(Entity.json(stats));
+			
+		}
+		
 		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
 	}
 

@@ -143,6 +143,13 @@ public class PlayerManagerTests {
 		Assert.assertTrue(playerResponse.resources.online);
 		
 	}
+
+	
+	
+	@Test
+	public void test_join_with_stats() {
+		Assert.assertTrue("Not Implemented", false);
+	}
 	
 	
 	
@@ -162,6 +169,13 @@ public class PlayerManagerTests {
 	}
 	
 
+	
+	@Test
+	public void test_quit_with_stats() {
+		Assert.assertTrue("Not Implemented", false);
+	}
+	
+	
 	
 	private void validatePlayerResponse(PlayerResponse playerResponse, String token, int method_count) {
 		Assert.assertEquals(method_count, playerResponse.methods.size());
