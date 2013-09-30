@@ -3,7 +3,7 @@
 
   <groupId>com.playgrid</groupId>
   <artifactId>pgp-java-sdk</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.2</version>
 
   <name>PlayGrid Platform SDK</name>
   <url>http://www.playgrid.com/</url>
@@ -57,8 +57,8 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-
-      <plugin>
+<!-- 
+       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.1</version>
@@ -84,7 +84,7 @@
           </execution>
         </executions>
       </plugin>
-
+ -->
     </plugins>
 
   </build>  
