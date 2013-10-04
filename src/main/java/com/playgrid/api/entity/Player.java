@@ -1,6 +1,7 @@
 package com.playgrid.api.entity;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,6 +21,7 @@ public class Player {
 	public Date auth_timestamp;
 	public boolean online;
 	public int unverified_days;
+	public ArrayList<StatusScript> scripts;
 
 
 	public Player() {}
