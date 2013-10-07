@@ -21,7 +21,7 @@ public class Player {
 	public Date auth_timestamp;
 	public boolean online;
 	public int unverified_days;
-	public ArrayList<StatusScript> scripts;
+	public ArrayList<CommandScript> scripts;
 
 
 	public Player() {}
@@ -36,6 +36,17 @@ public class Player {
 	}
 
 
+	/**
+	 * Return list of this player's CommandScripts for execution
+	 * *note: nulls the player's reference to the list
+	 */
+	public ArrayList<CommandScript> getScripts() {
+		ArrayList<CommandScript> scripts = this.scripts;
+		this.scripts = null;
+		return scripts;
+	}
+	
+	
 	/**
 	 * Status to communicate to games to determine player authorization
 	 * @author jpage
@@ -74,5 +85,6 @@ public class Player {
 		UNVERIFIED, 
 	}
 
+	
 
 }
