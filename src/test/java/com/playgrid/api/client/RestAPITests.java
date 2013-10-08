@@ -86,7 +86,7 @@ public class RestAPITests {
 	@Test
 	public void test_APIRoot() {
 		APIRoot root = api.getAPIRoot();
-		Assert.assertEquals(2, root.methods.size());
+		Assert.assertEquals(4, root.methods.size());
 		
 		ArrayList<String> expected_names = new ArrayList<String>();
 		expected_names.add("players");
