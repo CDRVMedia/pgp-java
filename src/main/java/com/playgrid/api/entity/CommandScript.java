@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.playgrid.api.client.RestAPI;
@@ -18,7 +19,8 @@ public class CommandScript {
 		CommandScriptLog csl = new CommandScriptLog();
 		csl.script_log = log;
 		WebTarget webTarget = RestAPI.getInstance().createTarget(success_url);
-		webTarget.request().put(Entity.json(log));
+		Response response = webTarget.request().put(Entity.json(csl));
+		RestAPI.getInstance().translateResponse(response, Response.class);
 	}
 	
 	public CommandScript() {}

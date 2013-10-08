@@ -172,7 +172,8 @@ public class RestAPI {
 	        
 	        if (webAppException != null) {
 	        	try {
-	        		response.readEntity(responseType);
+	        		response.close();
+	        		// response.readEntity(responseType);
 	        	} catch (Exception e) {
 	        	}
         		throw webAppException;
