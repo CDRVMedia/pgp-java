@@ -2,6 +2,7 @@ package com.playgrid.api.entity;
 import java.net.URI;
 import java.util.ArrayList;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
@@ -20,7 +21,11 @@ public class CommandScript {
 		csl.script_log = log;
 		WebTarget webTarget = RestAPI.getInstance().createTarget(success_url);
 		Response response = webTarget.request().put(Entity.json(csl));
-		RestAPI.getInstance().translateResponse(response, Response.class);
+		if(response.getStatus() != 200) {
+			String code = Integer.toString(response.getStatus());
+			throw new WebApplicationException("Unsuccesful status code: "+code);
+		}
+		response.close();
 	}
 	
 	public CommandScript() {}
