@@ -16,10 +16,11 @@ public class CommandScript {
 	public URI success_url = null;
 	public URI error_url = null;
 	
-	private void complete(String log, URI url) {
+	public void complete(String log, Boolean success) {
+		URI url = success ? success_url : error_url;
 		CommandScriptLog csl = new CommandScriptLog();
 		csl.script_log = log;
-		WebTarget webTarget = RestAPI.getInstance().createTarget(success_url);
+		WebTarget webTarget = RestAPI.getInstance().createTarget(url);
 		Response response = webTarget.request().put(Entity.json(csl));
 		if(response.getStatus() != 200) {
 			String code = Integer.toString(response.getStatus());
@@ -29,14 +30,6 @@ public class CommandScript {
 	}
 	
 	public CommandScript() {}
-	
-	public void error(String log) {
-		complete(log, error_url);
-	}
-	
-	public void success(String log) {
-		complete(log, success_url);
-	}
 }
 
 
