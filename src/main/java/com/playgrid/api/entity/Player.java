@@ -22,7 +22,7 @@ public class Player {
 	public boolean online;
 	public int unverified_days;
 	public ArrayList<CommandScript> scripts;
-	public ArrayList<PendingOrderLine> pending_order_lines;
+	public ArrayList<OrderLine> pending_order_lines;
 
 
 	public Player() {}
@@ -52,8 +52,8 @@ public class Player {
 	 * Return list of this player's PendingOrderLines for execution
 	 * *note: nulls the player's reference to the list
 	 */
-	public ArrayList<PendingOrderLine> getLines() {
-		ArrayList<PendingOrderLine> lines = this.pending_order_lines;
+	public ArrayList<OrderLine> getLines() {
+		ArrayList<OrderLine> lines = this.pending_order_lines;
 		this.pending_order_lines = null;
 		return lines;
 	}
