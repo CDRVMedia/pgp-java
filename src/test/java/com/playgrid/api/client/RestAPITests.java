@@ -91,6 +91,8 @@ public class RestAPITests {
 		ArrayList<String> expected_names = new ArrayList<String>();
 		expected_names.add("players");
 		expected_names.add("games");
+		expected_names.add("users");
+		expected_names.add("order-lines");
 
 		ArrayList<String> actual_names = new ArrayList<String>();
 		for (Method method : root.methods) {

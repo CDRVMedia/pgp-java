@@ -37,6 +37,7 @@ import com.playgrid.api.client.manager.PlayerManager;
 import com.playgrid.api.entity.APIRoot;
 import com.playgrid.api.entity.Base;
 import com.playgrid.api.entity.Method;
+import com.playgrid.api.entity.provider.GsonMessageBodyProvider;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
 import com.playgrid.api.filter.UserAgentFilter;
@@ -68,6 +69,7 @@ public class RestAPI {
 
         clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
         clientConfig.register(new UserAgentFilter(config.getUserAgent()));      // Register PGP UserAgent filter
+        clientConfig.register(GsonMessageBodyProvider.class);                   // Register Gson entity provider
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         
