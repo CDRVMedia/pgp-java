@@ -17,6 +17,7 @@ public class Game {
 	public int heartbeat_interval;
 	public Date auth_timestamp;
 	public URL website;
+	public String[] permission_groups;
 
 	public Game() {}
 
