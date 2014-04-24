@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.playgrid.api.entity.APIRoot;
-import com.playgrid.api.entity.Method;
+import com.playgrid.api.entity.Endpoint;
 
 
 
@@ -95,7 +95,7 @@ public class RestAPITests {
 		expected_names.add("order-lines");
 
 		ArrayList<String> actual_names = new ArrayList<String>();
-		for (Method method : root.methods) {
+		for (Endpoint method : root.methods) {
 			actual_names.add(method.name);
 		}
 		

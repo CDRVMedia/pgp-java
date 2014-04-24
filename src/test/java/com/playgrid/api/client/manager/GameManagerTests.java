@@ -13,7 +13,7 @@ import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Game;
 import com.playgrid.api.entity.GameResponse;
 import com.playgrid.api.entity.Games;
-import com.playgrid.api.entity.Method;
+import com.playgrid.api.entity.Endpoint;
 
 
 
@@ -42,8 +42,8 @@ public class GameManagerTests {
     public void test_all() {
         Games games = api.getGamesManager().all();
         Assert.assertEquals(3, games.methods.size());
-        Method method = games.methods.get(0);
-        Assert.assertTrue(method instanceof Method);
+        Endpoint method = games.methods.get(0);
+        Assert.assertTrue(method instanceof Endpoint);
         
         Assert.assertTrue(1 == games.resources.count);
         Game game = games.resources.items.get(0);
@@ -98,8 +98,8 @@ public class GameManagerTests {
 	private void validateGameResponse(GameResponse gameResponse, Integer method_count) {
 		Assert.assertEquals(method_count, (Integer)gameResponse.methods.size());
 		if (method_count > 0) {
-			Method method = gameResponse.methods.get(0);
-	        Assert.assertTrue(method instanceof Method);
+			Endpoint method = gameResponse.methods.get(0);
+	        Assert.assertTrue(method instanceof Endpoint);
 		}
         
         Assert.assertTrue(gameResponse.resources instanceof Game);

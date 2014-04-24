@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.playgrid.api.client.RestAPI;
-import com.playgrid.api.entity.Method;
+import com.playgrid.api.entity.Endpoint;
 import com.playgrid.api.entity.Player;
 import com.playgrid.api.entity.PlayerRegistration;
 import com.playgrid.api.entity.PlayerRegistrationResponse;
@@ -45,8 +45,8 @@ public class PlayerManagerTests {
 	public void test_all() {
 		Players players = api.getPlayerManager().all();
 		Assert.assertEquals(2, players.methods.size());
-		Method method = players.methods.get(0);
-		Assert.assertTrue(method instanceof Method);
+		Endpoint method = players.methods.get(0);
+		Assert.assertTrue(method instanceof Endpoint);
 		
 		Assert.assertTrue(0 < players.resources.items.size());
 		Player player = players.resources.items.get(0);
@@ -180,8 +180,8 @@ public class PlayerManagerTests {
 	private void validatePlayerResponse(PlayerResponse playerResponse, String token, int method_count) {
 		Assert.assertEquals(method_count, playerResponse.methods.size());
 		if (method_count > 0) {
-			Method method = playerResponse.methods.get(0);
-			Assert.assertTrue(method instanceof Method);
+			Endpoint method = playerResponse.methods.get(0);
+			Assert.assertTrue(method instanceof Endpoint);
 		}
 		
 		Assert.assertTrue(playerResponse.resources instanceof Player);

@@ -13,7 +13,7 @@ public abstract class Base {
 	public String name;
 	public URI url;
 	
-	public List<Method> methods;
+	public List<Endpoint> methods;
 
 	
 	@Override

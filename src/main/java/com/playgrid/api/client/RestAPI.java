@@ -36,7 +36,7 @@ import com.playgrid.api.client.manager.GameManager;
 import com.playgrid.api.client.manager.PlayerManager;
 import com.playgrid.api.entity.APIRoot;
 import com.playgrid.api.entity.Base;
-import com.playgrid.api.entity.Method;
+import com.playgrid.api.entity.Endpoint;
 import com.playgrid.api.entity.provider.GsonMessageBodyProvider;
 import com.playgrid.api.filter.AuthorizationFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
@@ -50,7 +50,7 @@ public class RestAPI {
 	private static RestConfig config = new RestConfig();
 	private Client client;
 	private WebTarget root_api_wt;
-	private List<Method> methods;
+	private List<Endpoint> methods;
 
 
 	
@@ -232,13 +232,13 @@ public class RestAPI {
 	
 
 	
-	private Method getMethod(String name) {
+	private Endpoint getMethod(String name) {
 		if (methods == null) {
 			Base base = this.getAPIRoot();
 			this.methods = base.methods;
 		}
 		
-		for (Method m : methods) {
+		for (Endpoint m : methods) {
 			if (m.name.equals(name)) {
 				return m;
 			}
@@ -253,7 +253,7 @@ public class RestAPI {
 	
 	public GameManager getGamesManager() { 
 
-		Method gamesMethod = this.getMethod("games");
+		Endpoint gamesMethod = this.getMethod("games");
 		WebTarget target = this.createTarget(gamesMethod.url);
 		return new GameManager(target);
 		
@@ -263,7 +263,7 @@ public class RestAPI {
 
 	public PlayerManager getPlayerManager() {
 	
-		Method playersMethod = this.getMethod("players");
+		Endpoint playersMethod = this.getMethod("players");
 		WebTarget target = this.createTarget(playersMethod.url);
 		return new PlayerManager(target);
 

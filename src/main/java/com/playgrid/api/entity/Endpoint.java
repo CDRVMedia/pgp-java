@@ -6,12 +6,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class Method {
+public class Endpoint {
 
 	public String name;
 	public URI url; 
 	
-	public Method() {}
+	public Endpoint() {}
 	
 	
 	@Override
