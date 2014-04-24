@@ -16,6 +16,7 @@ public class Player {
 	public String[] permission_groups;
 	public Status status;
 	public String user_id;
+	public String uid;  // uid provided by bukkit (uuid with dashes stripped)
 	public String reason;
 	public Date suspended_until;
 	public Date auth_timestamp;

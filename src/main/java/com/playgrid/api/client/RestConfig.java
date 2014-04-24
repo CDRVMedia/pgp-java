@@ -8,7 +8,7 @@ public class RestConfig {
 	
 	private String accessToken = null;
 	private String pgpURL = "http://api.playgrid.com";                          // TODO: (JP) Turn into URI
-	private String version = "1.1";
+	private String version = "2.0";
 	
 	private StringBuilder userAgent = new StringBuilder();
 	
