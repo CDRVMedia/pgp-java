@@ -40,7 +40,7 @@ public class GameManagerTests {
 
 	@Test
     public void test_all() {
-        Games games = api.getGamesManager().all();
+        Games games = api.getGameManager().all();
         Assert.assertEquals(3, games.methods.size());
         Endpoint method = games.methods.get(0);
         Assert.assertTrue(method instanceof Endpoint);
@@ -64,7 +64,7 @@ public class GameManagerTests {
 	
 	@Test
 	public void test_connect() {
-		GameResponse gameResponse = api.getGamesManager().connect();
+		GameResponse gameResponse = api.getGameManager().connect();
 		validateGameResponse(gameResponse, 0);
 
 		Assert.assertTrue(gameResponse.resources.online);
@@ -75,7 +75,7 @@ public class GameManagerTests {
 	
 	@Test
 	public void test_disconnect() {
-		GameResponse gameResponse = api.getGamesManager().disconnect();
+		GameResponse gameResponse = api.getGameManager().disconnect();
 		validateGameResponse(gameResponse, 0);
 
 		Assert.assertFalse(gameResponse.resources.online);
@@ -86,7 +86,7 @@ public class GameManagerTests {
 	
 	@Test
 	public void test_heartbeat() {
-		GameResponse gameResponse = api.getGamesManager().heartbeat();
+		GameResponse gameResponse = api.getGameManager().heartbeat();
 		validateGameResponse(gameResponse, 0);
 		
 		Assert.assertTrue(gameResponse.resources.online);

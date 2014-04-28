@@ -50,7 +50,7 @@ public class RestAPI {
 	private static RestConfig config = new RestConfig();
 	private Client client;
 	private WebTarget root_api_wt;
-	private List<Endpoint> methods;
+	private List<Endpoint> endpoints;
 
 
 	
@@ -232,29 +232,29 @@ public class RestAPI {
 	
 
 	
-	private Endpoint getMethod(String name) {
-		if (methods == null) {
+	private Endpoint getEndpoint(String name) {
+		if (endpoints == null) {
 			Base base = this.getAPIRoot();
-			this.methods = base.methods;
+			this.endpoints = base.methods;
 		}
 		
-		for (Endpoint m : methods) {
+		for (Endpoint m : endpoints) {
 			if (m.name.equals(name)) {
 				return m;
 			}
 		}
 	
 		String msg = String.format("Method '%s' Not Found", name);
-		throw new NotAllowedException(msg, methods.toString(), (String[])null);
+		throw new NotAllowedException(msg, endpoints.toString(), (String[])null);
 	
 	}
 
 	
 	
-	public GameManager getGamesManager() { 
+	public GameManager getGameManager() { 
 
-		Endpoint gamesMethod = this.getMethod("games");
-		WebTarget target = this.createTarget(gamesMethod.url);
+		Endpoint gamesEndpoint = this.getEndpoint("games");
+		WebTarget target = this.createTarget(gamesEndpoint.url);
 		return new GameManager(target);
 		
 	}
@@ -263,7 +263,7 @@ public class RestAPI {
 
 	public PlayerManager getPlayerManager() {
 	
-		Endpoint playersMethod = this.getMethod("players");
+		Endpoint playersMethod = this.getEndpoint("players");
 		WebTarget target = this.createTarget(playersMethod.url);
 		return new PlayerManager(target);
 

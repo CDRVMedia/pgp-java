@@ -124,7 +124,7 @@ public class PlayerManagerTests {
 	@Test
 	public void test_join() {
 		// Test with offline Game
-		api.getGamesManager().disconnect();
+		api.getGameManager().disconnect();
 		
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		PlayerResponse playerResponse;
@@ -136,7 +136,7 @@ public class PlayerManagerTests {
 		Assert.assertFalse(playerResponse.resources.online);
 
 		// Test with online Game
-		api.getGamesManager().connect();
+		api.getGameManager().connect();
 
 		playerResponse = api.getPlayerManager().join(player);
 		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
