@@ -9,16 +9,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class PlayerAuthorization {
 
 	@XmlElement
-	public String player_token;
+	public String name;
 
 	
 	
 	public PlayerAuthorization() {}
 	
 	
-	public PlayerAuthorization(String player_token) {
+	public PlayerAuthorization(String name) {
 	
-		this.player_token = player_token;
+		this.name = name;
 	
 	}
 
@@ -28,7 +28,7 @@ public class PlayerAuthorization {
 	@Override
 	public String toString() {
 
-		return this.player_token;
+		return this.name;
 	
 	}
 }

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class PlayerRegistration {
 
 	@XmlElement
-	public String player_token;
+	public String name;
 	@XmlElement
 	public String email;
 	@XmlElement
@@ -20,9 +20,9 @@ public class PlayerRegistration {
 	public PlayerRegistration() {}
 	
 	
-	public PlayerRegistration(String player_token, String email) {
+	public PlayerRegistration(String name, String email) {
 	
-		this.player_token = player_token;
+		this.name = name;
 		this.email = email;
 	
 	}
@@ -33,7 +33,7 @@ public class PlayerRegistration {
 	@Override
 	public String toString() {
 
-		return this.player_token + " - " + this.email;
+		return this.name + " - " + this.email;
 	
 	}
 }

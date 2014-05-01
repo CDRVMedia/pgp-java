@@ -98,7 +98,7 @@ public class PlayerManagerTests {
 		PlayerRegistration pr;
 		pr = api.getPlayerManager().register(token, email);
 		
-		Assert.assertEquals(token, pr.player_token);
+		Assert.assertEquals(token, pr.name);
 		Assert.assertEquals(email, pr.email);
 		Assert.assertEquals("SUCCESS", pr.message);
 
@@ -106,7 +106,7 @@ public class PlayerManagerTests {
 		email = "jason@94920.org";
 		pr = api.getPlayerManager().register(token, email);
 		
-		Assert.assertTrue(pr.player_token.equals(token));
+		Assert.assertTrue(pr.name.equals(token));
 		Assert.assertTrue(pr.email.equals(email));
 		Assert.assertTrue(pr.message.equals("ALREADY REGISTERED"));
 
