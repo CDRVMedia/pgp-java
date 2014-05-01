@@ -69,11 +69,11 @@ public class PlayerManagerTests {
 		// Test authorization_required (default)
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		Player player;
-		player = api.getPlayerManager().authorize(token);
+		player = api.getPlayerManager().authorize(token, "");
 		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
 
 		// Test authorization_required (False) with known player
-		player = api.getPlayerManager().authorize(token, false);
+		player = api.getPlayerManager().authorize(token, "", false);
 		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
 
 /*
@@ -96,7 +96,7 @@ public class PlayerManagerTests {
 		String email = "test@playgrid.com";
 
 		PlayerRegistration pr;
-		pr = api.getPlayerManager().register(token, email);
+		pr = api.getPlayerManager().register(token, "", email);
 		
 		Assert.assertEquals(token, pr.name);
 		Assert.assertEquals(email, pr.email);
@@ -104,7 +104,7 @@ public class PlayerManagerTests {
 
 		token = "BranchNever";                                                  // FIXME: (JP) Hardcoded ID & email
 		email = "jason@94920.org";
-		pr = api.getPlayerManager().register(token, email);
+		pr = api.getPlayerManager().register(token, "", email);
 		
 		Assert.assertTrue(pr.name.equals(token));
 		Assert.assertTrue(pr.email.equals(email));
@@ -120,7 +120,7 @@ public class PlayerManagerTests {
 		api.getGameManager().disconnect(this.game);
 		
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		Player player = api.getPlayerManager().authorize(token);
+		Player player = api.getPlayerManager().authorize(token, "");
 
 		player = api.getPlayerManager().join(player);
 		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
@@ -147,7 +147,7 @@ public class PlayerManagerTests {
 	@Test
 	public void test_quit() {
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		Player player = api.getPlayerManager().authorize(token);
+		Player player = api.getPlayerManager().authorize(token, "");
 
 		
 		player = api.getPlayerManager().quit(player);

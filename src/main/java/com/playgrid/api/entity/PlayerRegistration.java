@@ -11,6 +11,8 @@ public class PlayerRegistration {
 	@XmlElement
 	public String name;
 	@XmlElement
+	public String uid;  // uid provided by bukkit (uuid with dashes stripped)	
+	@XmlElement
 	public String email;
 	@XmlElement
 	public String message;
@@ -20,10 +22,11 @@ public class PlayerRegistration {
 	public PlayerRegistration() {}
 	
 	
-	public PlayerRegistration(String name, String email) {
+	public PlayerRegistration(String name, String uid, String email) {
 	
 		this.name = name;
 		this.email = email;
+		this.uid = uid;
 	
 	}
 

@@ -78,19 +78,19 @@ public class PlayerManager extends AbstractManager {
 	}
 
 
-	public Player authorize(String name) {
-		return authorize(name, true);
+	public Player authorize(String name, String uid) {
+		return authorize(name, uid, true);
 	}
 	
 	
-	public Player authorize(String name, boolean authorization_required) {
+	public Player authorize(String name, String uid, boolean authorization_required) {
 		WebTarget webTarget = restAPI.getEndpointTarget("player:authorize");
 
 		if (authorization_required == false) {
 			webTarget = webTarget.queryParam("authorization_required", authorization_required);
 		}
 		
-		PlayerAuthorization auth = new PlayerAuthorization(name);
+		PlayerAuthorization auth = new PlayerAuthorization(name, uid);
 
 		Response response = webTarget.request().put(Entity.json(auth));
 		if (response.getStatus() == 405) {
@@ -101,10 +101,10 @@ public class PlayerManager extends AbstractManager {
 	}
 
 
-	public PlayerRegistration register(String name, String email) {
+	public PlayerRegistration register(String name, String uid, String email) {
 		WebTarget webTarget = restAPI.getEndpointTarget("player:register");
 
-		PlayerRegistration reg = new PlayerRegistration(name, email);
+		PlayerRegistration reg = new PlayerRegistration(name, uid, email);
 		
 		Response response = webTarget.request().put(Entity.json(reg));
 		return RestAPI.getInstance().translateResponse(response, PlayerRegistration.class);

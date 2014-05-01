@@ -10,15 +10,17 @@ public class PlayerAuthorization {
 
 	@XmlElement
 	public String name;
-
+	@XmlElement
+	public String uid;  // uid provided by bukkit (uuid with dashes stripped)
 	
 	
 	public PlayerAuthorization() {}
 	
 	
-	public PlayerAuthorization(String name) {
+	public PlayerAuthorization(String name, String uid) {
 	
 		this.name = name;
+		this.uid = uid;
 	
 	}
 
