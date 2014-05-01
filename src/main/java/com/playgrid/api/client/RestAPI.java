@@ -35,7 +35,6 @@ import org.glassfish.jersey.message.GZipEncoder;
 import com.playgrid.api.client.manager.GameManager;
 import com.playgrid.api.client.manager.PlayerManager;
 import com.playgrid.api.entity.APIRoot;
-import com.playgrid.api.entity.Base;
 import com.playgrid.api.entity.Endpoint;
 import com.playgrid.api.entity.provider.GsonMessageBodyProvider;
 import com.playgrid.api.filter.AuthorizationFilter;
@@ -51,6 +50,8 @@ public class RestAPI {
 	private Client client;
 	private WebTarget root_api_wt;
 	private List<Endpoint> endpoints;
+	private PlayerManager playerManager;
+	private GameManager gameManager;
 
 
 	
@@ -232,41 +233,44 @@ public class RestAPI {
 	
 
 	
-	private Endpoint getEndpoint(String name) {
+	public Endpoint getEndpoint(String name) {
 		if (endpoints == null) {
-			Base base = this.getAPIRoot();
-			this.endpoints = base.methods;
+			APIRoot base = this.getAPIRoot();
+			this.endpoints = base.endpoints;
 		}
 		
-		for (Endpoint m : endpoints) {
-			if (m.name.equals(name)) {
-				return m;
+		for (Endpoint e : endpoints) {
+			if (e.name.equals(name)) {
+				return e;
 			}
 		}
 	
-		String msg = String.format("Method '%s' Not Found", name);
+		String msg = String.format("Endpont '%s' Not Found", name);
 		throw new NotAllowedException(msg, endpoints.toString(), (String[])null);
 	
 	}
-
+	
+	
+	
+	public WebTarget getEndpointTarget(String name) {
+		Endpoint ep = this.getEndpoint(name);
+		return this.createTarget(ep.url);
+	}
+	
 	
 	
 	public GameManager getGameManager() { 
-
-		Endpoint gamesEndpoint = this.getEndpoint("games");
-		WebTarget target = this.createTarget(gamesEndpoint.url);
-		return new GameManager(target);
-		
+		if(gameManager == null)
+			gameManager = new GameManager();
+		return gameManager;
 	}
 
 
 
 	public PlayerManager getPlayerManager() {
-	
-		Endpoint playersMethod = this.getEndpoint("players");
-		WebTarget target = this.createTarget(playersMethod.url);
-		return new PlayerManager(target);
-
+		if(playerManager == null)
+			playerManager = new PlayerManager();
+		return playerManager;
 	}
 	
 }

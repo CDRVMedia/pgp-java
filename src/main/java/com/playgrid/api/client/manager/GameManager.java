@@ -4,22 +4,23 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import com.playgrid.api.client.RestAPI;
-import com.playgrid.api.entity.GameResponse;
+import com.playgrid.api.entity.Game;
 import com.playgrid.api.entity.Games;
 
 public class GameManager extends AbstractManager {
 		
 
 	
-	public GameManager(WebTarget target) {
-		super(target);
+	public GameManager() {
+		super();
 	}
 
 
 	@Override
 	public Games all() {
-		Response response = baseTarget.request().get();
-		return RestAPI.getInstance().translateResponse(response, Games.class);
+		WebTarget target = restAPI.getEndpointTarget("game:list");
+		Response response = target.request().get();
+		return restAPI.translateResponse(response, Games.class);
 	}
 	
 	
@@ -29,21 +30,28 @@ public class GameManager extends AbstractManager {
 //	}
 
 	
-	public GameResponse connect() {
-		Response response = baseTarget.path("connect/").request().get();
-		return RestAPI.getInstance().translateResponse(response, GameResponse.class);
+	public Game connect(Game game) {
+		Response response = game.getTarget().path("connect/").request().get();
+		return RestAPI.getInstance().translateResponse(response, Game.class);
 	}
 
 	
-	public GameResponse disconnect() {
-		Response response = baseTarget.path("disconnect/").request().get();
-		return RestAPI.getInstance().translateResponse(response, GameResponse.class);
+	public Game disconnect(Game game) {
+		Response response = game.getTarget().path("disconnect/").request().get();
+		return RestAPI.getInstance().translateResponse(response, Game.class);
 	}
 	
 	
-	public GameResponse heartbeat() {
-		Response response = baseTarget.path("heartbeat/").request().get();
-		return RestAPI.getInstance().translateResponse(response, GameResponse.class);
+	public Game heartbeat(Game game) {
+		Response response = game.getTarget().path("heartbeat/").request().get();
+		return RestAPI.getInstance().translateResponse(response, Game.class);
+	}
+	
+	
+	public Game self() {
+		WebTarget target = restAPI.getEndpointTarget("game:self");		
+		Response response = target.request().get();
+		return RestAPI.getInstance().translateResponse(response, Game.class);
 	}
 	
 }

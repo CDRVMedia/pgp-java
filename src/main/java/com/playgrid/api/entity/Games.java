@@ -1,12 +1,14 @@
 package com.playgrid.api.entity;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
-public class Games extends Base {
+public class Games extends BaseList {
 
-	public GamesResources resources;
+	public ArrayList<Game> items;
 	
 	public Games() {}
 	

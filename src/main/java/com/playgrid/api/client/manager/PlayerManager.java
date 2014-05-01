@@ -9,41 +9,39 @@ import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Player;
 import com.playgrid.api.entity.PlayerAuthorization;
 import com.playgrid.api.entity.PlayerRegistration;
-import com.playgrid.api.entity.PlayerRegistrationResponse;
-import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
 public class PlayerManager extends AbstractManager {
+
 	
-	
-	public PlayerManager(WebTarget target) {
-		super(target);
+	public PlayerManager() {
+		super();		
 	}
 	
 	
 	@Override
 	public Players all() {
-		Response response = baseTarget.request().get();
-		return RestAPI.getInstance().translateResponse(response, Players.class);
+		WebTarget target = restAPI.getEndpointTarget("player:list");
+		Response response = target.request().get();
+		return restAPI.translateResponse(response, Players.class);
 	}
 
 	
-	public PlayerResponse reload(Player player) {
+	public Player reload(Player player) {
 		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url);
 		Response response = webTarget.request().get();
-		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+		return RestAPI.getInstance().translateResponse(response, Player.class);
 	}
 	
 	
-	public PlayerResponse join(Player player) {
+	public Player join(Player player) {
 		return this.join(player, null);
 	}
 	
 	
-	public PlayerResponse join(Player player, String stats) {
-		
-		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url).path("join/");
-		
+	public Player join(Player player, String stats) {
+		WebTarget webTarget = player.getTarget().path("join/");
+				
 		Response response;
 		if (stats == null) {
 			response = webTarget.request().get();
@@ -53,19 +51,19 @@ public class PlayerManager extends AbstractManager {
 		
 		}
 		
-		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+		return RestAPI.getInstance().translateResponse(response, Player.class);
 	
 	}
 	
 
-	public PlayerResponse quit(Player player) {
+	public Player quit(Player player) {
 		return this.quit(player, null);
 	}
 
 
-	public PlayerResponse quit(Player player, String stats) {
+	public Player quit(Player player, String stats) {
 		
-		WebTarget webTarget = RestAPI.getInstance().createTarget(player.url).path("quit/");
+		WebTarget webTarget = player.getTarget().path("quit/");
 		
 		Response response;
 		if (stats == null) {
@@ -76,17 +74,17 @@ public class PlayerManager extends AbstractManager {
 			
 		}
 		
-		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+		return RestAPI.getInstance().translateResponse(response, Player.class);
 	}
 
 
-	public PlayerResponse authorize(String player_token) {
+	public Player authorize(String player_token) {
 		return authorize(player_token, true);
 	}
 	
 	
-	public PlayerResponse authorize(String player_token, boolean authorization_required) {
-		WebTarget webTarget = baseTarget.path("authorize/");
+	public Player authorize(String player_token, boolean authorization_required) {
+		WebTarget webTarget = restAPI.getEndpointTarget("player:authorize");
 
 		if (authorization_required == false) {
 			webTarget = webTarget.queryParam("authorization_required", authorization_required);
@@ -98,18 +96,18 @@ public class PlayerManager extends AbstractManager {
 		if (response.getStatus() == 405) {
 			throw new NotAllowedException(response);
 		}
-		return RestAPI.getInstance().translateResponse(response, PlayerResponse.class);
+		return RestAPI.getInstance().translateResponse(response, Player.class);
 
 	}
 
 
-	public PlayerRegistrationResponse register(String player_token, String email) {
-		WebTarget webTarget = baseTarget.path("register/");
+	public PlayerRegistration register(String player_token, String email) {
+		WebTarget webTarget = restAPI.getEndpointTarget("player:register");
 
 		PlayerRegistration reg = new PlayerRegistration(player_token, email);
 		
 		Response response = webTarget.request().put(Entity.json(reg));
-		return RestAPI.getInstance().translateResponse(response, PlayerRegistrationResponse.class);
+		return RestAPI.getInstance().translateResponse(response, PlayerRegistration.class);
 		
 	}
 

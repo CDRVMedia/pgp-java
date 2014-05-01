@@ -1,15 +1,12 @@
 package com.playgrid.api.client.manager;
 
-import javax.ws.rs.client.WebTarget;
+import com.playgrid.api.client.RestAPI;
 
 public abstract class AbstractManager {
-	
-	protected WebTarget baseTarget;
-	
+	protected RestAPI restAPI = RestAPI.getInstance();;
 	
 	
-	public AbstractManager(WebTarget target) {
-		this.baseTarget = target;
+	public AbstractManager() {
 	}
 
 	

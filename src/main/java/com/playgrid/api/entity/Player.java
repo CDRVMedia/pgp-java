@@ -4,7 +4,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.ws.rs.client.WebTarget;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.playgrid.api.client.RestAPI;
 
 
 
@@ -26,8 +29,14 @@ public class Player {
 	public ArrayList<OrderLine> pending_order_lines;
 
 
-	public Player() {}
+	public Player() {
+	}
 
+	
+	
+	public WebTarget getTarget() {
+		return RestAPI.getInstance().createTarget(url);
+	}	
 
 	
 	@Override

@@ -10,11 +10,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.playgrid.api.client.RestAPI;
-import com.playgrid.api.entity.Endpoint;
+import com.playgrid.api.entity.Game;
 import com.playgrid.api.entity.Player;
 import com.playgrid.api.entity.PlayerRegistration;
-import com.playgrid.api.entity.PlayerRegistrationResponse;
-import com.playgrid.api.entity.PlayerResponse;
 import com.playgrid.api.entity.Players;
 
 
@@ -23,6 +21,7 @@ import com.playgrid.api.entity.Players;
 public class PlayerManagerTests {
 
 	private RestAPI api;
+	private Game game;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -36,7 +35,7 @@ public class PlayerManagerTests {
 		RestAPI.getConfig().setURL("http://api.local.playgrid.com:8001");
 		RestAPI.getConfig().setDebug(true);
 		this.api = RestAPI.getInstance();
-		
+		this.game = api.getGameManager().self();		
 	}
 
 	
@@ -44,12 +43,9 @@ public class PlayerManagerTests {
 	@Test
 	public void test_all() {
 		Players players = api.getPlayerManager().all();
-		Assert.assertEquals(2, players.methods.size());
-		Endpoint method = players.methods.get(0);
-		Assert.assertTrue(method instanceof Endpoint);
 		
-		Assert.assertTrue(0 < players.resources.items.size());
-		Player player = players.resources.items.get(0);
+		Assert.assertTrue(0 < players.items.size());
+		Player player = players.items.get(0);
 		Assert.assertTrue(player instanceof Player);
 		
 	}
@@ -59,9 +55,8 @@ public class PlayerManagerTests {
 	@Test
 	public void test_reload() {
 		Players players = api.getPlayerManager().all();
-		Player player = players.resources.items.get(0);
-		PlayerResponse response = api.getPlayerManager().reload(player);
-		Player reloaded = response.resources;
+		Player player = players.items.get(0);
+		Player reloaded = api.getPlayerManager().reload(player);
 		
 		Assert.assertEquals(player.url, reloaded.url);                          // Make sure urls (id) match
 		
@@ -73,13 +68,13 @@ public class PlayerManagerTests {
 	public void test_authorize() {
 		// Test authorization_required (default)
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().authorize(token);
-		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
+		Player player;
+		player = api.getPlayerManager().authorize(token);
+		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
 
 		// Test authorization_required (False) with known player
-		playerResponse = api.getPlayerManager().authorize(token, false);
-		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
+		player = api.getPlayerManager().authorize(token, false);
+		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
 
 /*
  * This test alters the database
@@ -100,22 +95,20 @@ public class PlayerManagerTests {
 		String token = "test";                                                  // FIXME: (JP) Tear down the created player/account
 		String email = "test@playgrid.com";
 
-		PlayerRegistrationResponse prr;
-		prr = api.getPlayerManager().register(token, email);
-		PlayerRegistration playerRegistration = prr.resources;
+		PlayerRegistration pr;
+		pr = api.getPlayerManager().register(token, email);
 		
-		Assert.assertTrue(playerRegistration.player_token.equals(token));
-		Assert.assertTrue(playerRegistration.email.equals(email));
-		Assert.assertTrue(playerRegistration.message.equals("SUCCESS"));
+		Assert.assertEquals(token, pr.player_token);
+		Assert.assertEquals(email, pr.email);
+		Assert.assertEquals("SUCCESS", pr.message);
 
 		token = "BranchNever";                                                  // FIXME: (JP) Hardcoded ID & email
 		email = "jason@94920.org";
-		prr = api.getPlayerManager().register(token, email);
-		playerRegistration = prr.resources;
+		pr = api.getPlayerManager().register(token, email);
 		
-		Assert.assertTrue(playerRegistration.player_token.equals(token));
-		Assert.assertTrue(playerRegistration.email.equals(email));
-		Assert.assertTrue(playerRegistration.message.equals("ALREADY REGISTERED"));
+		Assert.assertTrue(pr.player_token.equals(token));
+		Assert.assertTrue(pr.email.equals(email));
+		Assert.assertTrue(pr.message.equals("ALREADY REGISTERED"));
 
 	}
 	
@@ -124,23 +117,21 @@ public class PlayerManagerTests {
 	@Test
 	public void test_join() {
 		// Test with offline Game
-		api.getGameManager().disconnect();
+		api.getGameManager().disconnect(this.game);
 		
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().authorize(token);
-		Player player = playerResponse.resources;
+		Player player = api.getPlayerManager().authorize(token);
 
-		playerResponse = api.getPlayerManager().join(player);
-		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
-		Assert.assertFalse(playerResponse.resources.online);
+		player = api.getPlayerManager().join(player);
+		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
+		Assert.assertFalse(player.online);
 
 		// Test with online Game
-		api.getGameManager().connect();
+		api.getGameManager().connect(this.game);
 
-		playerResponse = api.getPlayerManager().join(player);
-		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
-		Assert.assertTrue(playerResponse.resources.online);
+		player = api.getPlayerManager().join(player);
+		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
+		Assert.assertTrue(player.online);
 		
 	}
 
@@ -156,15 +147,13 @@ public class PlayerManagerTests {
 	@Test
 	public void test_quit() {
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
-		PlayerResponse playerResponse;
-		playerResponse = api.getPlayerManager().authorize(token); 
-		Player player = playerResponse.resources;
+		Player player = api.getPlayerManager().authorize(token);
 
 		
-		playerResponse = api.getPlayerManager().quit(player);
-		validatePlayerResponse(playerResponse, token, 0);                       // FIXME: (JP) Methods not consistent
+		player = api.getPlayerManager().quit(player);
+		validatePlayer(player, token);                       // FIXME: (JP) Methods not consistent
 
-		Assert.assertFalse(playerResponse.resources.online);
+		Assert.assertFalse(player.online);
 
 	}
 	
@@ -177,15 +166,7 @@ public class PlayerManagerTests {
 	
 	
 	
-	private void validatePlayerResponse(PlayerResponse playerResponse, String token, int method_count) {
-		Assert.assertEquals(method_count, playerResponse.methods.size());
-		if (method_count > 0) {
-			Endpoint method = playerResponse.methods.get(0);
-			Assert.assertTrue(method instanceof Endpoint);
-		}
-		
-		Assert.assertTrue(playerResponse.resources instanceof Player);
-		Player player = playerResponse.resources;
+	private void validatePlayer(Player player, String token) {		
 		Assert.assertTrue(player.name.equals(token));
 	}
 

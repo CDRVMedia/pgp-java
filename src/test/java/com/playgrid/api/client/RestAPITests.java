@@ -86,23 +86,21 @@ public class RestAPITests {
 	@Test
 	public void test_APIRoot() {
 		APIRoot root = api.getAPIRoot();
-		Assert.assertEquals(4, root.methods.size());
 		
 		ArrayList<String> expected_names = new ArrayList<String>();
-		expected_names.add("players");
-		expected_names.add("games");
-		expected_names.add("users");
-		expected_names.add("order-lines");
+		expected_names.add("player:list");
+		expected_names.add("player:authorize");
+		expected_names.add("player:register");
+		expected_names.add("game:list");
+		expected_names.add("game:self");
+		expected_names.add("order:line-list");
 
 		ArrayList<String> actual_names = new ArrayList<String>();
-		for (Endpoint method : root.methods) {
-			actual_names.add(method.name);
+		for (Endpoint endpoint : root.endpoints) {
+			actual_names.add(endpoint.name);
 		}
-		
-		Assert.assertEquals(expected_names, actual_names);
-		
-		Assert.assertEquals(0, root.resources.size());
-		
+		Assert.assertTrue(actual_names.containsAll(expected_names));
+				
 	}
 
 }
