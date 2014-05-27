@@ -79,17 +79,8 @@ public class PlayerManager extends AbstractManager {
 
 
 	public Player authorize(String name, String uid) {
-		return authorize(name, uid, true);
-	}
-	
-	
-	public Player authorize(String name, String uid, boolean authorization_required) {
 		WebTarget webTarget = restAPI.getEndpointTarget("player:authorize");
 
-		if (authorization_required == false) {
-			webTarget = webTarget.queryParam("authorization_required", authorization_required);
-		}
-		
 		PlayerAuthorization auth = new PlayerAuthorization(name, uid);
 
 		Response response = webTarget.request().put(Entity.json(auth));
