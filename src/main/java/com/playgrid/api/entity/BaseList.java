@@ -4,12 +4,11 @@ import java.net.URI;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @XmlRootElement
 public abstract class BaseList {
 
-	public int count = 0;													// TODO: (JP) Add results per page - rpp
+	public int count = 0; // TODO: (JP) Add results per page - rpp
 	public URI next = null;
 	public URI previous = null;
-	
+
 }
