@@ -28,24 +28,17 @@ public class Player {
 	public ArrayList<CommandScript> scripts;
 	public ArrayList<OrderLine> pending_order_lines;
 
-
 	public Player() {
 	}
 
-	
-	
 	public WebTarget getTarget() {
 		return RestAPI.getInstance().createTarget(url);
 	}	
-
 	
 	@Override
 	public String toString() {
-	
 		return this.name;
-	
 	}
-
 
 	/**
 	 * Return list of this player's CommandScripts for execution
@@ -56,7 +49,6 @@ public class Player {
 		this.scripts = null;
 		return scripts;
 	}
-	
 	
 	/**
 	 * Return list of this player's PendingOrderLines for execution
