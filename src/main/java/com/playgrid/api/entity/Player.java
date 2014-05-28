@@ -16,15 +16,15 @@ public class Player {
 
 	public String name;
 	public URI url;
-	public String[] permission_groups;
-	public Status status;
 	public String user_id;
 	public String uid;  // uid provided by bukkit (uuid with dashes stripped)
-	public String reason;
-	public Date suspended_until;
+	public boolean authorized;
 	public Date auth_timestamp;
 	public boolean online;
-	public int unverified_days;
+	public String registration;
+	public String membership;
+	public String[] entitlements;
+	public String message;
 	public ArrayList<CommandScript> scripts;
 	public ArrayList<OrderLine> pending_order_lines;
 
@@ -59,46 +59,4 @@ public class Player {
 		this.pending_order_lines = null;
 		return lines;
 	}
-	
-	
-	/**
-	 * Status to communicate to games to determine player authorization
-	 * @author jpage
-	 *
-	 */
-	public static enum Status {
-
-		/*
-		 * Player is authorized for game
-		 */
-		AUTHORIZED, 
-
-		/*
-		 * Player is banned from game
-		 */
-		BANNED,
-		
-		/*
-		 * An error occurred
-		 */
-		ERROR, 
-		
-		/*
-		 * Player has no status or is anonymous
-		 */
-		NONE, 
-		
-		/*
-		 * Player is suspended from game
-		 */
-		SUSPENDED, 
-		
-		/*
-		 * Player has not verified PlayGrid account
-		 */
-		UNVERIFIED, 
-	}
-
-	
-
 }
