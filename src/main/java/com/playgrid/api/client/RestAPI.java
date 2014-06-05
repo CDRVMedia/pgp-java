@@ -2,6 +2,7 @@ package com.playgrid.api.client;
 
 import java.net.URI;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.naming.ConfigurationException;
 import javax.ws.rs.BadRequestException;
@@ -36,8 +37,10 @@ import com.playgrid.api.client.manager.GameManager;
 import com.playgrid.api.client.manager.PlayerManager;
 import com.playgrid.api.entity.APIRoot;
 import com.playgrid.api.entity.Endpoint;
+import com.playgrid.api.entity.HttpException;
 import com.playgrid.api.entity.provider.GsonMessageBodyProvider;
 import com.playgrid.api.filter.AuthorizationFilter;
+import com.playgrid.api.filter.LanguageFilter;
 import com.playgrid.api.filter.MediaTypeFilter;
 import com.playgrid.api.filter.UserAgentFilter;
 
@@ -58,8 +61,10 @@ public class RestAPI {
 	private RestAPI() {
 		
 		String token =  null;                                                   // FIXME (JP): Handle this better
+		String locale = null;
         try {
         	token = config.getAccessToken();
+        	locale = config.getLocale();
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -69,13 +74,15 @@ public class RestAPI {
         ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
 
         clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
+        clientConfig.register(new LanguageFilter(locale));	 					// Register PGP Authorization Token filter
         clientConfig.register(new UserAgentFilter(config.getUserAgent()));      // Register PGP UserAgent filter
         clientConfig.register(GsonMessageBodyProvider.class);                   // Register Gson entity provider
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
         clientConfig.register(GZipEncoder.class);                               // Register GZip intercepter
         
         if (config.isDebug()) {
-        	clientConfig.register(LoggingFilter.class);                         // Add logging filter
+        	clientConfig.register(new LoggingFilter(Logger.getLogger(""), 200));                         // Add logging filter
+        	//clientConfig.register(LoggingFilter.class);                         // Add logging filter
         }
         
         ClientConnectionManager connectionManager = new PoolingClientConnectionManager();
@@ -119,6 +126,15 @@ public class RestAPI {
 
 		if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             WebApplicationException webAppException;
+            
+        	// exception response code, try reading exception entity to get the message
+            String message = "";
+        	try {
+        		message = response.readEntity(HttpException.class).detail;
+        	} catch (Exception e) {
+        		response.close(); // if exception read fails, close response
+        	}
+            
 	        try {
 	            final int statusCode = response.getStatus();
 	            final Response.Status status = Response.Status.fromStatusCode(statusCode);
@@ -129,39 +145,39 @@ public class RestAPI {
 	            } else switch (status) {
 	                
 	            	case BAD_REQUEST:
-	                    webAppException = new BadRequestException(response);
+	                    webAppException = new BadRequestException(message);
 	                    break;
 	                
 	                case UNAUTHORIZED:
-	                    webAppException = new NotAuthorizedException(response);
+	                    webAppException = new NotAuthorizedException(message);
 	                    break;
 	                
 	                case FORBIDDEN:
-	                    webAppException = new ForbiddenException(response);
+	                    webAppException = new ForbiddenException(message);
 	                    break;
 	                
 	                case NOT_FOUND:
-	                    webAppException = new NotFoundException(response);
+	                    webAppException = new NotFoundException(message);
 	                    break;
 	                
 	                case METHOD_NOT_ALLOWED:
-	                    webAppException = new NotAllowedException(response);
+	                    webAppException = new NotAllowedException(message);
 	                    break;
 	                
 	                case NOT_ACCEPTABLE:
-	                    webAppException = new NotAcceptableException(response);
+	                    webAppException = new NotAcceptableException(message);
 	                    break;
 	                
 	                case UNSUPPORTED_MEDIA_TYPE:
-	                    webAppException = new NotSupportedException(response);
+	                    webAppException = new NotSupportedException(message);
 	                    break;
 	                
 	                case INTERNAL_SERVER_ERROR:
-	                    webAppException = new InternalServerErrorException(response);
+	                    webAppException = new InternalServerErrorException(message);
 	                    break;
 	                
 	                case SERVICE_UNAVAILABLE:
-	                    webAppException = new ServiceUnavailableException(response);
+	                    webAppException = new ServiceUnavailableException(message);
 	                    break;
 
 	                default:
@@ -173,13 +189,7 @@ public class RestAPI {
 	            throw new ProcessingException(LocalizationMessages.RESPONSE_TO_EXCEPTION_CONVERSION_FAILED(), t.getCause());
 	        }
 	        
-	        if (webAppException != null) {
-	        	try {
-	        		response.close();
-	        	} catch (Exception e) {
-	        	}
-        		throw webAppException;
-	        }
+        	throw webAppException; // throws appropriate exception with HttpException entity read if possible
 
 		}
 
