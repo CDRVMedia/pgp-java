@@ -6,22 +6,20 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 
+import com.playgrid.api.client.RestConfig;
+
 public class LanguageFilter implements ClientRequestFilter {
-	private final String locale;
+	private RestConfig config;
 
-	/**
-	 * @param locale code
-	 */
-	public LanguageFilter(String locale) {
-
-		this.locale = locale;
-	
+	public LanguageFilter(RestConfig config) {
+		this.config = config;
 	}
-	
+
 	@Override
 	public void filter(ClientRequestContext requestContext) throws IOException {
 		
-		requestContext.getHeaders().add(HttpHeaders.ACCEPT_LANGUAGE, this.locale);
+		String locale = config.getLocale();
+		requestContext.getHeaders().add(HttpHeaders.ACCEPT_LANGUAGE, locale);
 
 	}
 

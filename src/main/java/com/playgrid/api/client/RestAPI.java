@@ -61,10 +61,8 @@ public class RestAPI {
 	private RestAPI() {
 		
 		String token =  null;                                                   // FIXME (JP): Handle this better
-		String locale = null;
         try {
         	token = config.getAccessToken();
-        	locale = config.getLocale();
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -74,7 +72,7 @@ public class RestAPI {
         ClientConfig clientConfig = new ClientConfig();                         // Create client configuration
 
         clientConfig.register(new AuthorizationFilter(token));	 				// Register PGP Authorization Token filter
-        clientConfig.register(new LanguageFilter(locale));	 					// Register PGP Authorization Token filter
+        clientConfig.register(new LanguageFilter(config));	 					// Register PGP Authorization Token filter
         clientConfig.register(new UserAgentFilter(config.getUserAgent()));      // Register PGP UserAgent filter
         clientConfig.register(GsonMessageBodyProvider.class);                   // Register Gson entity provider
         clientConfig.register(MediaTypeFilter.class);                           // Register PGP MediaType filter
