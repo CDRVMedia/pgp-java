@@ -60,11 +60,7 @@ public class GameManagerTests {
 	
 	@Test
 	public void test_connect() {
-		Game game = api.getGameManager().connect(this.game);
-		validateGame(game);
-
-		Assert.assertTrue(game.online);
-		
+		api.getGameManager().connect(this.game);
 	}
 	
 	

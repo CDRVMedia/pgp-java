@@ -5,6 +5,7 @@ import javax.ws.rs.core.Response;
 
 import com.playgrid.api.client.RestAPI;
 import com.playgrid.api.entity.Game;
+import com.playgrid.api.entity.GameConnect;
 import com.playgrid.api.entity.Games;
 
 public class GameManager extends AbstractManager {
@@ -30,9 +31,9 @@ public class GameManager extends AbstractManager {
 //	}
 
 	
-	public Game connect(Game game) {
+	public GameConnect connect(Game game) {
 		Response response = game.getTarget().path("connect/").request().get();
-		return RestAPI.getInstance().translateResponse(response, Game.class);
+		return RestAPI.getInstance().translateResponse(response, GameConnect.class);
 	}
 
 	
