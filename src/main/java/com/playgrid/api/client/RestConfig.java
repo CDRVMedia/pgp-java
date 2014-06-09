@@ -9,6 +9,7 @@ public class RestConfig {
 	private String accessToken = null;
 	private String pgpURL = "http://api.playgrid.com";                          // TODO: (JP) Turn into URI
 	private String version = "2.1";
+	private String locale = "en-US";
 	
 	private StringBuilder userAgent = new StringBuilder();
 	
@@ -41,6 +42,18 @@ public class RestConfig {
 		if (url != null && !url.isEmpty()) {
 			this.pgpURL = url;
 		}
+	}
+	
+	
+	
+	public String getLocale() {
+		return locale;
+	}
+	
+	
+	
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}
 	
 	
