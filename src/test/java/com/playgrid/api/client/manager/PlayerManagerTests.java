@@ -1,6 +1,8 @@
 package com.playgrid.api.client.manager;
 
 
+import javax.ws.rs.BadRequestException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -143,13 +145,11 @@ public class PlayerManagerTests {
 	public void test_quit() {
 		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
 		Player player = api.getPlayerManager().authorize(token, "");
-
 		
 		player = api.getPlayerManager().quit(player);
 		validatePlayer(player, token);                                          // FIXME: (JP) Methods not consistent
 
 		Assert.assertFalse(player.online);
-
 	}
 	
 
@@ -159,6 +159,31 @@ public class PlayerManagerTests {
 		Assert.assertTrue("Not Implemented", false);
 	}
 	
+	
+	@Test
+	public void test_action() {
+		String token = "BranchNever";                                           // FIXME: (JP) Hardcoded token
+		Player player = api.getPlayerManager().authorize(token, "");
+		
+		// test ban
+		player = api.getPlayerManager().ban(player);
+		validatePlayer(player, token);                                          // FIXME: (JP) Methods not consistent
+		Assert.assertFalse(player.authorized);
+		Assert.assertTrue(player.message.startsWith("You have been banned"));
+		
+		// test suspension
+		player = api.getPlayerManager().suspend(player, "72h");
+		validatePlayer(player, token);                                          // FIXME: (JP) Methods not consistent
+		Assert.assertFalse(player.authorized);
+		Assert.assertTrue(player.message.startsWith("You have been suspended until"));
+		
+		// test invalid duration
+		try {
+			player = api.getPlayerManager().suspend(player, "36");
+		} catch (BadRequestException e) {
+			return;
+		}
+	}
 	
 	
 	private void validatePlayer(Player player, String token) {		

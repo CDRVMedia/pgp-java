@@ -40,11 +40,9 @@ public class PlayerManager extends AbstractManager {
 		Response response;
 		if (stats == null) {
 			response = webTarget.request().get();
-
 		} else {
 			response = webTarget.request().post(Entity.json(stats));
 		}
-
 		return RestAPI.getInstance().translateResponse(response, Player.class);
 	}
 
@@ -53,20 +51,37 @@ public class PlayerManager extends AbstractManager {
 	}
 
 	public Player quit(Player player, String stats) {
-
 		WebTarget webTarget = player.getTarget().path("quit/");
 
 		Response response;
 		if (stats == null) {
 			response = webTarget.request().get();
-
 		} else {
 			response = webTarget.request().post(Entity.json(stats));
 		}
-
 		return RestAPI.getInstance().translateResponse(response, Player.class);
 	}
+	
+	public Player ban(Player player) {
+		return action(player, null);
+	}
 
+	public Player suspend(Player player, String duration) {
+		return action(player, duration);
+	}
+
+	private Player action(Player player, String duration) {
+		WebTarget webTarget = player.getTarget();
+		if (duration != null) {
+			webTarget = webTarget.queryParam("action", "suspend")
+								 .queryParam("duration", duration);
+		} else {
+			webTarget = webTarget.queryParam("action", "ban");
+		}
+		Response response = webTarget.request().put(Entity.json(player));
+		return RestAPI.getInstance().translateResponse(response, Player.class);
+	}
+	
 	public Player authorize(String name, String uid) {
 		WebTarget webTarget = restAPI.getEndpointTarget("player:authorize");
 
@@ -77,7 +92,6 @@ public class PlayerManager extends AbstractManager {
 			throw new NotAllowedException(response);
 		}
 		return RestAPI.getInstance().translateResponse(response, Player.class);
-
 	}
 
 	public PlayerRegistration register(String name, String uid, String email) {
@@ -87,7 +101,5 @@ public class PlayerManager extends AbstractManager {
 
 		Response response = webTarget.request().put(Entity.json(reg));
 		return RestAPI.getInstance().translateResponse(response, PlayerRegistration.class);
-
 	}
-
 }
