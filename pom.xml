@@ -3,7 +3,7 @@
 
   <groupId>com.playgrid</groupId>
   <artifactId>pgp-java-sdk</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.3</version>
 
   <name>PlayGrid Platform SDK</name>
   <url>http://www.playgrid.com/</url>

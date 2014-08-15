@@ -23,6 +23,7 @@ public class Player {
 	public String membership;
 	public String[] entitlements;
 	public String message;
+	public String motd;
 	public ArrayList<CommandScript> scripts;
 	public ArrayList<OrderLine> pending_order_lines;
 
